@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juan-Pierre Louw — BI Consulting × Data Governance × Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy: #14164a;
+    --navy-deep: #0e0f38;
+    --gold: #c8a03d;
+    --gold-soft: #e4c877;
+    --paper: #f6f5f1;
+    --ink: #1c1d2e;
+    --ink-soft: #5a5c74;
+    --line: #dcdad2;
+  }
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,h2,h3{ font-family:'Fraunces', serif; margin:0; }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color: var(--gold);
+  }
+  .wrap{ max-width: 1100px; margin:0 auto; padding: 0 32px; }
+
+  /* NAV */
+  nav{
+    position: sticky; top:0; z-index: 50;
+    background: rgba(20,22,74,0.94);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid rgba(200,160,61,0.25);
+  }
+  nav .wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    height: 62px;
+  }
+  nav .brand{ color:#fff; font-family:'Fraunces', serif; font-weight:600; font-size:1.05rem; letter-spacing:0.02em; }
+  nav .brand span{ color: var(--gold); }
+  nav ul{ display:flex; gap:28px; list-style:none; margin:0; padding:0; }
+  nav a{ color:#c9cae0; text-decoration:none; font-size:0.85rem; font-weight:500; }
+  nav a:hover{ color: var(--gold-soft); }
+  @media (max-width: 720px){ nav ul{ display:none; } }
+
+  /* HERO */
+  .hero{
+    background: linear-gradient(160deg, var(--navy) 0%, var(--navy-deep) 100%);
+    color:#fff;
+    padding: 96px 0 80px;
+    position: relative;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute; right:-120px; top:-120px;
+    width:420px; height:420px; border-radius:50%;
+    background: radial-gradient(circle, rgba(200,160,61,0.18), transparent 70%);
+  }
+  .hero-grid{
+    display:grid; grid-template-columns: 1.4fr 1fr; gap: 48px; align-items:center;
+    position:relative; z-index:2;
+  }
+  .hero h1{ font-size: clamp(2.4rem, 5vw, 3.6rem); line-height:1.05; margin: 14px 0 18px; font-weight:600; }
+  .hero .role{ font-size:0.95rem; color: var(--gold-soft); letter-spacing:0.08em; text-transform:uppercase; font-weight:600; margin-bottom:4px;}
+  .hero p{ color:#c9cae0; font-size:1.05rem; line-height:1.7; max-width: 560px; }
+  .hero .meta{ margin-top:28px; display:flex; flex-wrap:wrap; gap:22px; font-size:0.88rem; color:#a9abc9; }
+  .hero .meta a{ color:#a9abc9; text-decoration:none; border-bottom:1px solid rgba(169,171,201,0.35); }
+  .portrait{
+    width:100%; aspect-ratio: 3/3.6; border-radius:6px;
+    background: linear-gradient(180deg, rgba(200,160,61,0.25), rgba(255,255,255,0.05));
+    border:1px solid rgba(200,160,61,0.35);
+    display:flex; align-items:center; justify-content:center;
+    color: rgba(255,255,255,0.4); font-size:0.8rem; font-family:'JetBrains Mono',monospace;
+  }
+  .cta-row{ margin-top:32px; display:flex; gap:14px; flex-wrap:wrap; }
+  .btn{
+    display:inline-block; padding:11px 22px; border-radius:3px;
+    font-size:0.85rem; font-weight:600; text-decoration:none; letter-spacing:0.02em;
+  }
+  .btn-gold{ background: var(--gold); color: var(--navy-deep); }
+  .btn-gold:hover{ background: var(--gold-soft); }
+  .btn-ghost{ border:1px solid rgba(255,255,255,0.3); color:#fff; }
+  .btn-ghost:hover{ border-color: var(--gold-soft); color: var(--gold-soft); }
+
+  /* SECTION GENERIC */
+  section{ padding: 76px 0; border-bottom: 1px solid var(--line); }
+  section.dark{ background: var(--navy); color:#fff; border-bottom:none; }
+  .section-head{ margin-bottom: 42px; max-width: 640px; }
+  .section-head h2{ font-size: 1.9rem; margin-top:8px; font-weight:600; }
+  .section-head p{ color: var(--ink-soft); margin-top:10px; font-size:1rem; line-height:1.6; }
+  section.dark .section-head p{ color:#c9cae0; }
+
+  /* TODAY */
+  .today-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:40px; }
+  .today-card{
+    background: var(--navy); color:#fff; border-radius:6px; padding:32px;
+    font-size:0.98rem; line-height:1.75; color:#dfe0ee;
+  }
+  .today-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:22px; }
+  .today-list li{ display:flex; gap:14px; align-items:flex-start; font-size:0.95rem; line-height:1.6; }
+  .dot{ width:8px; height:8px; border-radius:50%; background: var(--gold); margin-top:8px; flex-shrink:0; }
+  @media (max-width: 800px){ .today-grid{ grid-template-columns: 1fr; } }
+
+  /* PACE TRACK — signature element */
+  .pace-track{
+    position: relative; margin-top: 56px; padding-top: 10px;
+  }
+  .pace-line{
+    position: relative; height: 3px; background: var(--line); border-radius: 2px;
+  }
+  .pace-line .fill{
+    position:absolute; left:0; top:0; height:100%; width:38%;
+    background: var(--gold);
+    border-radius:2px;
+  }
+  .pace-stops{ display:flex; justify-content:space-between; margin-top:-3px; position:relative; }
+  .pace-stop{ text-align:center; flex:1; }
+  .pace-marker{
+    width:16px; height:16px; border-radius:50%; background: var(--paper);
+    border:3px solid var(--line); margin: -8px auto 14px;
+  }
+  .pace-stop.active .pace-marker, .pace-stop.done .pace-marker{ border-color: var(--gold); background: var(--gold); }
+  .pace-stop .split{ font-family:'JetBrains Mono', monospace; font-size:0.72rem; color: var(--ink-soft); }
+  .pace-stop .label{ font-weight:600; font-size:0.92rem; margin-top:4px; }
+  .pace-stop .tag{
+    font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase; color: var(--gold);
+    font-weight:700; margin-top:2px;
+  }
+
+  /* CARDS GRID (what you get) */
+  .cards-grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap:22px; }
+  .card{
+    background: rgba(255,255,255,0.04); border:1px solid rgba(200,160,61,0.25);
+    border-radius:6px; padding:26px 28px;
+  }
+  .card h3{ font-size:1.08rem; font-weight:600; color:#fff; margin-bottom:8px; font-family:'Inter',sans-serif; }
+  .card p{ color:#b9bbd6; font-size:0.9rem; line-height:1.6; margin:0; }
+  @media (max-width: 800px){ .cards-grid{ grid-template-columns: 1fr; } }
+
+  /* BADGES */
+  .badge-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:18px; }
+  .badge{
+    border:1px solid var(--line); border-radius:6px; padding:22px 18px; text-align:center;
+    background:#fff;
+  }
+  .badge .code{ font-family:'JetBrains Mono', monospace; font-weight:700; font-size:1.1rem; color: var(--navy); }
+  .badge .name{ font-size:0.82rem; color: var(--ink-soft); margin-top:4px; }
+  .badge.progress{ border-style:dashed; }
+  .badge.progress .tag{ display:inline-block; margin-top:8px; font-size:0.65rem; letter-spacing:0.08em; color:var(--gold); font-weight:700; text-transform:uppercase; }
+  @media (max-width: 800px){ .badge-grid{ grid-template-columns: repeat(2,1fr); } }
+
+  /* PROOF OF WORK — the part a static deck can't do */
+  .proof-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap:22px; }
+  .proof-card{
+    border:1px solid var(--line); border-radius:6px; padding:26px; background:#fff;
+    display:flex; flex-direction:column; gap:10px; text-decoration:none; color:inherit;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .proof-card:hover{ border-color: var(--gold); transform: translateY(-2px); }
+  .proof-card .kicker{ font-family:'JetBrains Mono', monospace; font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; color: var(--gold); }
+  .proof-card h3{ font-size:1.02rem; font-weight:600; }
+  .proof-card p{ color: var(--ink-soft); font-size:0.88rem; line-height:1.55; margin:0; }
+  .proof-card .arrow{ margin-top:auto; font-size:0.82rem; font-weight:600; color: var(--navy); }
+  @media (max-width: 800px){ .proof-grid{ grid-template-columns: 1fr; } }
+
+  /* BEYOND THE DATA */
+  .beyond{ background: var(--navy-deep); color:#fff; }
+  .beyond-grid{ display:grid; grid-template-columns: auto 1fr; gap:28px; align-items:center; }
+  .medal{
+    width:86px; height:86px; border-radius:50%; border:2px solid var(--gold);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    font-family:'JetBrains Mono', monospace; font-size:0.65rem; color: var(--gold-soft); text-align:center; padding:6px;
+  }
+  .splits{ display:flex; gap:26px; margin: 18px 0 24px; flex-wrap:wrap; }
+  .splits div{ font-family:'JetBrains Mono', monospace; font-size:0.82rem; color:#c9cae0; }
+  .splits strong{ color:#fff; }
+  .traits{ display:flex; gap:10px; flex-wrap:wrap; margin-top:18px; }
+  .traits span{
+    border:1px solid rgba(200,160,61,0.4); border-radius:20px; padding:6px 16px;
+    font-size:0.82rem; color: var(--gold-soft);
+  }
+  .beyond blockquote{
+    font-family:'Fraunces', serif; font-size:1.2rem; font-weight:400; line-height:1.5;
+    margin: 22px 0 0; color:#e7e8f3; max-width:640px;
+  }
+
+  /* FOOTER */
+  footer{ background: var(--navy-deep); color:#8c8ead; padding: 40px 0; text-align:center; font-size:0.82rem; }
+  footer a{ color: var(--gold-soft); text-decoration:none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">JP <span>Louw</span></div>
+    <ul>
+      <li><a href="#today">Today</a></li>
+      <li><a href="#roadmap">Roadmap</a></li>
+      <li><a href="#certs">Certifications</a></li>
+      <li><a href="#proof">Proof of Work</a></li>
+      <li><a href="#beyond">Beyond the Data</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="role">Senior BI Consultant · Microsoft Fabric</div>
+      <h1>Building the same rigor into cybersecurity &amp; GRC.</h1>
+      <p>I'm a data professional based in Pretoria, South Africa, with 3+ years leading Power BI and Microsoft Fabric solutions for enterprise clients — turning raw data into models and reports leadership trusts. Before BI, I spent a decade in fleet management and safety compliance, which is why I care as much about governance and auditability as I do about shipping a polished report.</p>
+      <div class="cta-row">
+        <a class="btn btn-gold" href="#proof">See the proof of work →</a>
+        <a class="btn btn-ghost" href="https://linkedin.com/in/jplouw">LinkedIn ↗</a>
+      </div>
+      <div class="meta">
+        <span>📍 Pretoria, South Africa</span>
+        <a href="https://linkedin.com/in/jplouw">linkedin.com/in/jplouw</a>
+        <span>Last updated: August 2026</span>
+      </div>
+    </div>
+    <div class="portrait">[ headshot ]</div>
+  </div>
+</header>
+
+<section id="today">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">What I'm responsible for today</div>
+      <h2>Senior BI Consultant, SEIDOR Analytics</h2>
+      <p>Templates and standards for our BI Center of Excellence, plus Power BI and Microsoft Fabric solutions on our proprietary "Clarity" reporting model — alongside bespoke report builds for individual enterprise clients.</p>
+    </div>
+    <div class="today-grid">
+      <div class="today-card">
+        My focus right now is deepening hands-on Fabric exposure — warehouses, lakehouses, and pipelines — moving beyond the report layer into the platform underneath it.
+      </div>
+      <ul class="today-list">
+        <li><span class="dot"></span> Full BI project lifecycle: specification, technical design, ETL, data modelling, testing</li>
+        <li><span class="dot"></span> Hands-on with Fabric warehouses, lakehouses, and pipelines</li>
+        <li><span class="dot"></span> Documentation for the BI Center of Excellence</li>
+        <li><span class="dot"></span> Stakeholder-facing report design across a variety of clients</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="roadmap" class="dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Where I'm headed</div>
+      <h2>From BI delivery toward governance, risk &amp; compliance</h2>
+      <p>A decade in fleet management, safety compliance and audit, paired with years building trusted reporting layers, points naturally toward governance and security work — not a certificate for its own sake, but a role where the contribution to risk and governance actually matters to the business.</p>
+    </div>
+
+    <div class="pace-track">
+      <div class="pace-line"><div class="fill"></div></div>
+      <div class="pace-stops">
+        <div class="pace-stop done">
+          <div class="pace-marker"></div>
+          <div class="split">SPLIT 01</div>
+          <div class="label">Senior BI Consultant</div>
+          <div class="tag">Today</div>
+        </div>
+        <div class="pace-stop active">
+          <div class="pace-marker"></div>
+          <div class="split">SPLIT 02</div>
+          <div class="label">Security-Aware BI &amp; Governance</div>
+          <div class="tag">In Progress</div>
+        </div>
+        <div class="pace-stop">
+          <div class="pace-marker"></div>
+          <div class="split">FINISH</div>
+          <div class="label">GRC / Security Leadership</div>
+          <div class="tag" style="color:#8c8ead;">The Goal</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-head" style="margin-top:64px;">
+      <div class="eyebrow">What you get when you hire me</div>
+      <h2>The parts of a BI project that are easy to skip — that I don't</h2>
+    </div>
+    <div class="cards-grid">
+      <div class="card">
+        <h3>Star schema data models</h3>
+        <p>Built for performance and clarity — not just to get the report out the door.</p>
+      </div>
+      <div class="card">
+        <h3>Optimized DAX measures</h3>
+        <p>Measures that stay fast as your data grows, not just at demo scale.</p>
+      </div>
+      <div class="card">
+        <h3>Documentation clients rarely get</h3>
+        <p>Business logic and model decisions written down, so nothing lives only in my head.</p>
+      </div>
+      <div class="card">
+        <h3>Security-minded data models</h3>
+        <p>Row-level security and access control built in from day one, not bolted on after a client asks.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="certs">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Current qualifications</div>
+      <h2>Microsoft certifications underpinning my practice</h2>
+    </div>
+    <div class="badge-grid">
+      <div class="badge"><div class="code">DP-600</div><div class="name">Fabric Analytics Engineer Associate</div></div>
+      <div class="badge"><div class="code">PL-300</div><div class="name">Power BI Data Analyst Associate</div></div>
+      <div class="badge"><div class="code">DP-900</div><div class="name">Azure Data Fundamentals</div></div>
+      <div class="badge"><div class="code">AZ-900</div><div class="name">Azure Fundamentals</div></div>
+      <div class="badge"><div class="code">AI-900</div><div class="name">Azure AI Fundamentals</div></div>
+      <div class="badge"><div class="code">PL-900</div><div class="name">Power Platform Fundamentals</div></div>
+    </div>
+
+    <div class="section-head" style="margin-top:56px;">
+      <div class="eyebrow">In progress</div>
+      <h2>Learning is a process — the journey's enjoyable too</h2>
+    </div>
+    <div class="badge-grid">
+      <div class="badge progress"><div class="code">PCNSE</div><div class="name">Palo Alto Networks Certified Security Engineer</div><div class="tag">In progress</div></div>
+      <div class="badge progress"><div class="code">ISC2 CC</div><div class="name">Certified in Cybersecurity</div><div class="tag">In progress</div></div>
+      <div class="badge progress"><div class="code">SC-900</div><div class="name">Security, Compliance &amp; Identity Fundamentals</div><div class="tag">In progress</div></div>
+      <div class="badge progress"><div class="code">DP-700</div><div class="name">Fabric Data Engineer Associate</div><div class="tag">In progress</div></div>
+      <div class="badge progress"><div class="code">DP-800</div><div class="name">SQL AI Developer Associate</div><div class="tag">In progress</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="proof" class="dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Proof of work — the thing a slide can't do</div>
+      <h2>Live, clickable, and actually working</h2>
+      <p>This is the section a PDF or PowerPoint can't have: every card below links to something real you can open right now.</p>
+    </div>
+    <div class="proof-grid">
+      <a class="proof-card" href="#" style="background:#fff;">
+        <div class="kicker">PCNSE Study Suite</div>
+        <h3>Interactive quiz apps (React)</h3>
+        <p>Domain-by-domain practice apps built while studying for PCNSE — hosted live, not just described.</p>
+        <div class="arrow">Open app →</div>
+      </a>
+      <a class="proof-card" href="#" style="background:#fff;">
+        <div class="kicker">Field notes</div>
+        <h3>BI → GRC transition blog</h3>
+        <p>Short posts on moving from BI delivery into governance and security, written as it happens.</p>
+        <div class="arrow">Read posts →</div>
+      </a>
+      <a class="proof-card" href="#" style="background:#fff;">
+        <div class="kicker">Case study</div>
+        <h3>Cronimet foundry pricing model</h3>
+        <p>A walkthrough of the SAP B1 → Power BI commission architecture, sanitised for public sharing.</p>
+        <div class="arrow">Read case study →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="beyond" class="beyond" style="border-bottom:none;">
+  <div class="wrap">
+    <div class="eyebrow">Beyond the data</div>
+    <div class="beyond-grid" style="margin-top:18px;">
+      <div class="medal">3×<br>FINISHER</div>
+      <div>
+        <h2 style="color:#fff; font-size:1.7rem;">Comrades Marathon</h2>
+        <div class="splits">
+          <div>2012 — <strong>11:46:15</strong></div>
+          <div>2013 — <strong>11:55:15</strong></div>
+          <div>2014 — <strong>11:56:57</strong></div>
+        </div>
+        <div class="traits">
+          <span>Grit</span><span>Determination</span><span>Planning</span><span>Discipline</span><span>Consistency</span>
+        </div>
+      </div>
+    </div>
+    <blockquote>"Long-distance running doesn't teach shortcuts — it teaches pacing, and finishing what you start."</blockquote>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Juan-Pierre Louw — BI Consulting × Data Governance × Security &nbsp;·&nbsp;
+    <a href="mailto:juanpierre.louw@icloud.com">juanpierre.louw@icloud.com</a> &nbsp;·&nbsp;
+    <a href="https://linkedin.com/in/jplouw">LinkedIn</a>
+  </div>
+</footer>
+
+</body>
+</html>
