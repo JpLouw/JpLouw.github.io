@@ -47,6 +47,26 @@ nav a{ color:#c9cae0; text-decoration:none; font-size:0.85rem; font-weight:500; 
 nav a:hover{ color: var(--gold-soft); }
 @media (max-width: 720px){ nav ul{ gap:16px; } }
 
+.nav-toggle-input{ display:none; }
+.nav-toggle-label{
+  display:none; cursor:pointer; color:#fff; font-size:1.6rem; line-height:1;
+  padding:4px 6px;
+}
+@media (max-width: 720px){
+  nav .wrap{ position:relative; }
+  .nav-toggle-label{ display:block; }
+  nav ul{
+    display:flex; flex-direction:column; gap:0;
+    position:absolute; top:62px; left:0; right:0;
+    background: var(--navy-deep);
+    max-height:0; overflow:hidden;
+    transition: max-height 0.25s ease;
+  }
+  nav ul li{ border-top:1px solid rgba(255,255,255,0.08); }
+  nav ul li a{ display:block; padding:14px 32px; }
+  .nav-toggle-input:checked ~ ul{ max-height:400px; }
+}
+
 /* HERO (homepage) */
 .hero{
   background: linear-gradient(160deg, var(--navy) 0%, var(--navy-deep) 100%);
