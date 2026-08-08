@@ -188,8 +188,16 @@ section.dark .section-head p{ color:#c9cae0; }
 .beyond blockquote{ font-family:'Fraunces', serif; font-size:1.2rem; font-weight:400; line-height:1.5; margin: 22px 0 0; color:#e7e8f3; max-width:640px; }
 
 /* FOOTER */
-footer{ background: var(--navy-deep); color:#8c8ead; padding: 40px 0; text-align:center; font-size:0.82rem; }
+body{ padding-bottom: 64px; }
+footer{
+  position: fixed; bottom:0; left:0; right:0; z-index: 40;
+  background: var(--navy-deep); color:#8c8ead; padding: 18px 0; text-align:center; font-size:0.82rem;
+}
 footer a{ color: var(--gold-soft); text-decoration:none; }
+@media (max-width: 600px){
+  footer{ font-size:0.72rem; padding:14px 12px; }
+  body{ padding-bottom: 56px; }
+}
 
 /* ---------- BLOG-SPECIFIC ---------- */
 .page-header{
