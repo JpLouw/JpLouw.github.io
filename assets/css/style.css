@@ -45,6 +45,7 @@ nav .brand span{ color: var(--gold); }
 nav ul{ display:flex; gap:28px; list-style:none; margin:0; padding:0; }
 nav a{ color:#c9cae0; text-decoration:none; font-size:0.85rem; font-weight:500; }
 nav a:hover{ color: var(--gold-soft); }
+nav a.active{ color: var(--gold-soft); font-weight:700; text-decoration:underline; text-underline-offset:6px; }
 @media (max-width: 720px){ nav ul{ gap:16px; } }
 
 .nav-toggle-input{ display:none; }
