@@ -109,6 +109,15 @@
       <p id="blogNoResults" class="blog-no-results" style="display:none;">No posts match your search — try a different term.</p>
 
     </div>
+
+    <div id="postResultsSection" style="display:none;">
+      <div class="section-head" style="margin-top:46px;">
+        <div class="eyebrow">Matching posts</div>
+        <h2 style="font-size:1.3rem;">Individual posts</h2>
+      </div>
+      <div class="post-list" id="postResultsList"></div>
+    </div>
+
   </div>
 </section>
 
@@ -120,26 +129,61 @@
   </div>
 </footer>
 <script src="../assets/js/nav-active.js?v=4"></script>
+<script src="../assets/js/search-index.js?v=4"></script>
 <script>
+  function escapeHtml(s) {
+    var d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
   function filterBlogCards() {
     var q = document.getElementById('blogSearch').value.trim().toLowerCase();
     var cards = document.querySelectorAll('#seriesGrid .series-card');
-    var visibleCount = 0;
+    var visibleTiles = 0;
+
+    // filter series tiles (title/desc match)
     cards.forEach(function (card) {
       var title = card.querySelector('h3') ? card.querySelector('h3').textContent.toLowerCase() : '';
       var desc = card.querySelector('p') ? card.querySelector('p').textContent.toLowerCase() : '';
       var matches = !q || title.indexOf(q) !== -1 || desc.indexOf(q) !== -1;
       card.style.display = matches ? '' : 'none';
-      if (matches) visibleCount++;
+      if (matches) visibleTiles++;
     });
+
+    // search individual posts via the index (covers posts nested inside series)
+    var postMatches = [];
+    if (q && window.BLOG_SEARCH_INDEX && window.BLOG_SEARCH_INDEX.posts) {
+      postMatches = window.BLOG_SEARCH_INDEX.posts.filter(function (p) {
+        return p.title.toLowerCase().indexOf(q) !== -1 || p.desc.toLowerCase().indexOf(q) !== -1;
+      });
+    }
+
+    var postSection = document.getElementById('postResultsSection');
+    var postList = document.getElementById('postResultsList');
+    if (postMatches.length) {
+      postList.innerHTML = postMatches.map(function (p) {
+        return '<a class="post-row" href="' + p.url + '">' +
+          '<span class="num" style="width:auto; font-size:0.72rem;">' + escapeHtml(p.series) + '</span>' +
+          '<span class="post-title">' + escapeHtml(p.title) + '</span>' +
+          '<span class="post-desc">' + escapeHtml(p.desc) + '</span>' +
+          '<span class="arrow">Read →</span></a>';
+      }).join('');
+      postSection.style.display = 'block';
+    } else {
+      postList.innerHTML = '';
+      postSection.style.display = 'none';
+    }
+
+    var totalMatches = visibleTiles + postMatches.length;
     var countEl = document.getElementById('blogSearchCount');
     var noResultsEl = document.getElementById('blogNoResults');
     if (q) {
-      countEl.textContent = visibleCount + (visibleCount === 1 ? ' result' : ' results');
+      countEl.textContent = totalMatches + (totalMatches === 1 ? ' result' : ' results');
     } else {
       countEl.textContent = '';
     }
-    noResultsEl.style.display = (visibleCount === 0) ? 'block' : 'none';
+    noResultsEl.style.display = (totalMatches === 0) ? 'block' : 'none';
   }
 </script>
 
