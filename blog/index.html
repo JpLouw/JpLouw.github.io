@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/style.css?v=4">
+<link rel="stylesheet" href="../assets/css/style.css?v=5">
 </head>
 <body>
 
@@ -128,8 +128,8 @@
     <a href="https://linkedin.com/in/jplouw">LinkedIn</a>
   </div>
 </footer>
-<script src="../assets/js/nav-active.js?v=4"></script>
-<script src="../assets/js/search-index.js?v=4"></script>
+<script src="../assets/js/nav-active.js?v=5"></script>
+<script src="../assets/js/search-index.js?v=5"></script>
 <script>
   function escapeHtml(s) {
     var d = document.createElement('div');
@@ -137,16 +137,27 @@
     return d.innerHTML;
   }
 
+  function escapeRegex(s) {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  // word-boundary match: "date" matches "Date Table" but not "updated"
+  function wordMatch(text, query) {
+    if (!query) return true;
+    var re = new RegExp('\\b' + escapeRegex(query), 'i');
+    return re.test(text);
+  }
+
   function filterBlogCards() {
-    var q = document.getElementById('blogSearch').value.trim().toLowerCase();
+    var q = document.getElementById('blogSearch').value.trim();
     var cards = document.querySelectorAll('#seriesGrid .series-card');
     var visibleTiles = 0;
 
     // filter series tiles (title/desc match)
     cards.forEach(function (card) {
-      var title = card.querySelector('h3') ? card.querySelector('h3').textContent.toLowerCase() : '';
-      var desc = card.querySelector('p') ? card.querySelector('p').textContent.toLowerCase() : '';
-      var matches = !q || title.indexOf(q) !== -1 || desc.indexOf(q) !== -1;
+      var title = card.querySelector('h3') ? card.querySelector('h3').textContent : '';
+      var desc = card.querySelector('p') ? card.querySelector('p').textContent : '';
+      var matches = !q || wordMatch(title, q) || wordMatch(desc, q);
       card.style.display = matches ? '' : 'none';
       if (matches) visibleTiles++;
     });
@@ -155,7 +166,7 @@
     var postMatches = [];
     if (q && window.BLOG_SEARCH_INDEX && window.BLOG_SEARCH_INDEX.posts) {
       postMatches = window.BLOG_SEARCH_INDEX.posts.filter(function (p) {
-        return p.title.toLowerCase().indexOf(q) !== -1 || p.desc.toLowerCase().indexOf(q) !== -1;
+        return wordMatch(p.title, q) || wordMatch(p.desc, q);
       });
     }
 
