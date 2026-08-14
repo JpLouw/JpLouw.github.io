@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="../assets/css/style.css?v=4">
 </head>
 <body>
 
@@ -40,7 +40,11 @@
 
 <section>
   <div class="wrap">
-    <div class="series-grid">
+    <div class="blog-search-row">
+      <input type="search" id="blogSearch" class="blog-search-input" placeholder="Search the blog..." oninput="filterBlogCards()" autocomplete="off">
+      <span id="blogSearchCount" class="blog-search-count"></span>
+    </div>
+    <div class="series-grid" id="seriesGrid">
 
       <a class="series-card" href="30-things-i-wish-i-knew/index.html">
         <div class="series-thumb">
@@ -102,6 +106,8 @@
         </div>
       </a>
 
+      <p id="blogNoResults" class="blog-no-results" style="display:none;">No posts match your search — try a different term.</p>
+
     </div>
   </div>
 </section>
@@ -113,7 +119,29 @@
     <a href="https://linkedin.com/in/jplouw">LinkedIn</a>
   </div>
 </footer>
-<script src="../assets/js/nav-active.js"></script>
+<script src="../assets/js/nav-active.js?v=4"></script>
+<script>
+  function filterBlogCards() {
+    var q = document.getElementById('blogSearch').value.trim().toLowerCase();
+    var cards = document.querySelectorAll('#seriesGrid .series-card');
+    var visibleCount = 0;
+    cards.forEach(function (card) {
+      var title = card.querySelector('h3') ? card.querySelector('h3').textContent.toLowerCase() : '';
+      var desc = card.querySelector('p') ? card.querySelector('p').textContent.toLowerCase() : '';
+      var matches = !q || title.indexOf(q) !== -1 || desc.indexOf(q) !== -1;
+      card.style.display = matches ? '' : 'none';
+      if (matches) visibleCount++;
+    });
+    var countEl = document.getElementById('blogSearchCount');
+    var noResultsEl = document.getElementById('blogNoResults');
+    if (q) {
+      countEl.textContent = visibleCount + (visibleCount === 1 ? ' result' : ' results');
+    } else {
+      countEl.textContent = '';
+    }
+    noResultsEl.style.display = (visibleCount === 0) ? 'block' : 'none';
+  }
+</script>
 
 </body>
 </html>
