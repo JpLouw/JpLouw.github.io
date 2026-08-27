@@ -195,6 +195,7 @@ footer{
   background: var(--navy-deep); color:#8c8ead; padding: 18px 0; text-align:center; font-size:0.82rem;
 }
 footer a{ color: var(--gold-soft); text-decoration:none; }
+.visitor-count{ font-family:'JetBrains Mono', monospace; font-size:0.76rem; color:#7c7ea0; }
 @media (max-width: 600px){
   footer{ font-size:0.72rem; padding:14px 12px; }
   body{ padding-bottom: 56px; }
