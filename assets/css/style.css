@@ -156,6 +156,9 @@ section.dark .section-head p{ color:#c9cae0; }
 .badge .name{ font-size:0.82rem; color: var(--ink-soft); margin-top:4px; }
 .badge.progress{ border-style:dashed; }
 .badge.progress .tag{ display:inline-block; margin-top:8px; font-size:0.65rem; letter-spacing:0.08em; color:var(--gold); font-weight:700; text-transform:uppercase; }
+.badge.retired{ border-style:dashed; border-color:#c7c5bd; opacity:0.75; }
+.badge.retired .code, .badge.retired .name{ color: var(--ink-soft); }
+.badge.retired .tag{ display:block; margin-top:8px; font-size:0.68rem; letter-spacing:0.03em; color:#8a887f; font-weight:500; text-transform:none; line-height:1.4; }
 @media (max-width: 800px){ .badge-grid{ grid-template-columns: repeat(2,1fr); } }
 
 /* PROOF OF WORK */
