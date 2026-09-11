@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SC-900 Exam Quiz — Juan-Pierre Louw</title>
+<meta name="description" content="Interactive SC-900 practice quiz and mock exam." />
+<style>
+  html, body { margin:0; padding:0; background:#0B0F14; }
+  #root { min-height:100vh; }
+  .boot-loader {
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    color:#6B7684; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:13px;
+    background: radial-gradient(1200px 600px at 20% -10%, #14202B 0%, #0B0F14 55%);
+  }
+</style>
+</head>
+<body>
+<div id="root"><div class="boot-loader">Loading…</div></div>
+
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useMemo, useCallback } = React;
+
+const IconBase = ({ size = 24, color = "currentColor", strokeWidth = 2, style, children }) =>
+  React.createElement("svg", {
+    width: size, height: size, viewBox: "0 0 24 24", fill: "none",
+    stroke: color, strokeWidth, strokeLinecap: "round", strokeLinejoin: "round", style,
+  }, children);
+
+const Shield = (p) => React.createElement(IconBase, p, React.createElement("path", { d: "M12 2 L20 6 V11 C20 16 16.5 20 12 22 C7.5 20 4 16 4 11 V6 Z" }));
+const ShieldCheck = (p) => React.createElement(IconBase, p,
+  React.createElement("path", { d: "M12 2 L20 6 V11 C20 16 16.5 20 12 22 C7.5 20 4 16 4 11 V6 Z" }),
+  React.createElement("polyline", { points: "9,12 11,14 15,9" }));
+const ShieldAlert = (p) => React.createElement(IconBase, p,
+  React.createElement("path", { d: "M12 2 L20 6 V11 C20 16 16.5 20 12 22 C7.5 20 4 16 4 11 V6 Z" }),
+  React.createElement("line", { x1: 12, y1: 8, x2: 12, y2: 13 }),
+  React.createElement("circle", { cx: 12, cy: 16.3, r: 0.6, fill: p.color || "currentColor", stroke: "none" }));
+const Check = (p) => React.createElement(IconBase, p, React.createElement("polyline", { points: "4,12 9,17 20,6" }));
+const X = (p) => React.createElement(IconBase, p,
+  React.createElement("line", { x1: 5, y1: 5, x2: 19, y2: 19 }),
+  React.createElement("line", { x1: 19, y1: 5, x2: 5, y2: 19 }));
+const ChevronRight = (p) => React.createElement(IconBase, p, React.createElement("polyline", { points: "9,5 16,12 9,19" }));
+const ChevronLeft = (p) => React.createElement(IconBase, p, React.createElement("polyline", { points: "15,5 8,12 15,19" }));
+const ChevronDown = (p) => React.createElement(IconBase, p, React.createElement("polyline", { points: "5,9 12,16 19,9" }));
+const ChevronUp = (p) => React.createElement(IconBase, p, React.createElement("polyline", { points: "5,15 12,8 19,15" }));
+const RotateCcw = (p) => React.createElement(IconBase, p,
+  React.createElement("path", { d: "M3 11 A9 9 0 1 1 6 17.5" }),
+  React.createElement("polyline", { points: "3,5 3,11 9,11" }));
+const Play = (p) => React.createElement(IconBase, p, React.createElement("path", { d: "M6 4 L20 12 L6 20 Z", fill: p.color || "currentColor", stroke: "none" }));
+const ListChecks = (p) => React.createElement(IconBase, p,
+  React.createElement("polyline", { points: "3,6 5,8 9,4" }),
+  React.createElement("line", { x1: 12, y1: 6, x2: 21, y2: 6 }),
+  React.createElement("polyline", { points: "3,13 5,15 9,11" }),
+  React.createElement("line", { x1: 12, y1: 13, x2: 21, y2: 13 }),
+  React.createElement("line", { x1: 5, y1: 19, x2: 21, y2: 19 }));
+const Target = (p) => React.createElement(IconBase, p,
+  React.createElement("circle", { cx: 12, cy: 12, r: 8 }),
+  React.createElement("circle", { cx: 12, cy: 12, r: 4.5 }),
+  React.createElement("circle", { cx: 12, cy: 12, r: 1, fill: p.color || "currentColor", stroke: "none" }));
+const ArrowUp = (p) => React.createElement(IconBase, p,
+  React.createElement("line", { x1: 12, y1: 19, x2: 12, y2: 5 }),
+  React.createElement("polyline", { points: "6,11 12,5 18,11" }));
+const ArrowDown = (p) => React.createElement(IconBase, p,
+  React.createElement("line", { x1: 12, y1: 5, x2: 12, y2: 19 }),
+  React.createElement("polyline", { points: "6,13 12,19 18,13" }));
+const Radar = (p) => React.createElement(IconBase, p,
+  React.createElement("circle", { cx: 12, cy: 12, r: 9 }),
+  React.createElement("path", { d: "M12 12 L12 4 A8 8 0 0 1 19 9 Z", fill: p.color || "currentColor", stroke: "none", opacity: 0.35 }),
+  React.createElement("circle", { cx: 12, cy: 12, r: 1, fill: p.color || "currentColor", stroke: "none" }));
+const Menu = (p) => React.createElement(IconBase, p,
+  React.createElement("line", { x1: 4, y1: 7, x2: 20, y2: 7 }),
+  React.createElement("line", { x1: 4, y1: 12, x2: 20, y2: 12 }),
+  React.createElement("line", { x1: 4, y1: 17, x2: 20, y2: 17 }));
+const Filter = (p) => React.createElement(IconBase, p, React.createElement("polygon", { points: "4,4 20,4 14,12 14,19 10,17 10,12" }));
+const Info = (p) => React.createElement(IconBase, p,
+  React.createElement("circle", { cx: 12, cy: 12, r: 9 }),
+  React.createElement("line", { x1: 12, y1: 11, x2: 12, y2: 16 }),
+  React.createElement("circle", { cx: 12, cy: 7.5, r: 0.6, fill: p.color || "currentColor", stroke: "none" }));
+const CheckCircle2 = (p) => React.createElement(IconBase, p,
+  React.createElement("circle", { cx: 12, cy: 12, r: 9 }),
+  React.createElement("polyline", { points: "8,12.5 11,15.5 16,9" }));
+const Circle = (p) => React.createElement(IconBase, p, React.createElement("circle", { cx: 12, cy: 12, r: 9 }));
+const Sparkles = (p) => React.createElement(IconBase, p,
+  React.createElement("path", { d: "M12 3 L13.2 9 L19 10.2 L13.2 11.4 L12 17.4 L10.8 11.4 L5 10.2 L10.8 9 Z", fill: p.color || "currentColor", stroke: "none" }),
+  React.createElement("path", { d: "M19 15 L19.6 17.4 L22 18 L19.6 18.6 L19 21 L18.4 18.6 L16 18 L18.4 17.4 Z", fill: p.color || "currentColor", stroke: "none", opacity: 0.7 }));
+const Search = (p) => React.createElement(IconBase, p,
+  React.createElement("circle", { cx: 10.5, cy: 10.5, r: 6.5 }),
+  React.createElement("line", { x1: 15.5, y1: 15.5, x2: 21, y2: 21 }));
+const BookOpen = (p) => React.createElement(IconBase, p,
+  React.createElement("path", { d: "M2 5 C5 4 8 4 12 6 C16 4 19 4 22 5 V18 C19 17 16 17 12 19 C8 17 5 17 2 18 Z" }),
+  React.createElement("line", { x1: 12, y1: 6, x2: 12, y2: 19 }));
+const Shuffle = (p) => React.createElement(IconBase, p,
+  React.createElement("path", { d: "M3 6 H8 L18 18 H21" }),
+  React.createElement("path", { d: "M3 18 H8 L11 14" }),
+  React.createElement("path", { d: "M14 6 H21" }),
+  React.createElement("polyline", { points: "18,3 21,6 18,9" }),
+  React.createElement("polyline", { points: "18,15 21,18 18,21" }));
+const AlertTriangle = (p) => React.createElement(IconBase, p,
+  React.createElement("path", { d: "M12 3 L22 20 H2 Z" }),
+  React.createElement("line", { x1: 12, y1: 9, x2: 12, y2: 14 }),
+  React.createElement("circle", { cx: 12, cy: 17, r: 0.6, fill: p.color || "currentColor", stroke: "none" }));
+
+// window.storage polyfill (real deployment: use localStorage instead of the Claude-artifact sandbox API)
+if (!window.storage) {
+  window.storage = {
+    get: async (key) => {
+      try {
+        const v = localStorage.getItem(key);
+        return v === null ? null : { key, value: v, shared: false };
+      } catch (e) { return null; }
+    },
+    set: async (key, value) => {
+      try { localStorage.setItem(key, value); return { key, value, shared: false }; }
+      catch (e) { return null; }
+    },
+  };
+}
+
+
+
+// SC-900 Question Bank
+// Domains: concepts | entra | security | compliance
+// Types: mcq (single/multi), tf (true/false set), match, order
+
+const DOMAINS = {
+  concepts: { label: "Security, Compliance & Identity Concepts", color: "#5EEAD4" },
+  entra: { label: "Microsoft Entra (Identity & Access)", color: "#C4B5FD" },
+  security: { label: "Microsoft Security Solutions", color: "#FCA5A5" },
+  compliance: { label: "Microsoft Compliance Solutions", color: "#FDE68A" },
+};
+
+let uid = 0;
+const id = () => `q${++uid}`;
+
+const mcq = (domain, prompt, options, explanation, selectN = 1) => ({
+  id: id(), domain, type: "mcq", prompt, options, explanation, selectN,
+});
+const tf = (domain, prompt, statements, explanation) => ({
+  id: id(), domain, type: "tf", prompt, statements, explanation,
+});
+const match = (domain, prompt, pairs, explanation) => ({
+  id: id(), domain, type: "match", prompt, pairs, explanation,
+});
+const order = (domain, prompt, items, explanation) => ({
+  id: id(), domain, type: "order", prompt, items, explanation,
+});
+
+const QUESTIONS = [
+  // ===================== CONCEPTS =====================
+  mcq("concepts",
+    "Your organization is migrating internal apps to a PaaS offering. Who is responsible for the hardware and the operating system after migration?",
+    [
+      { text: "The customer is responsible for both hardware and the OS", correct: false, why: "That describes an on-premises or IaaS-like split, not PaaS." },
+      { text: "The provider manages hardware; the customer manages the OS", correct: false, why: "This describes IaaS, where the OS still sits with the customer." },
+      { text: "The customer manages apps and data; the provider manages hardware and the OS", correct: true, why: "In PaaS, Microsoft handles the underlying servers, network, and OS patching, so you focus on your application and its data." },
+      { text: "The customer manages the entire stack", correct: false, why: "That's an on-premises model, the opposite of what PaaS offers." },
+    ],
+    "PaaS shifts hardware and OS responsibility to the cloud provider (e.g., Azure App Service, Azure SQL Database). The customer keeps ownership of applications, data, and access."
+  ),
+  mcq("concepts",
+    "A breach involved lateral movement across systems after an attacker got into the network. Which Zero Trust principle most directly addresses stopping that spread?",
+    [
+      { text: "Verify explicitly", correct: false, why: "This governs authenticating each request, not containing spread once inside." },
+      { text: "Assume breach", correct: true, why: "Assume breach means designing as if an attacker is already inside, driving segmentation, monitoring, and rapid detection that blocks lateral movement." },
+      { text: "Least privileged access", correct: false, why: "Limits what a compromised account can do, but doesn't by itself detect or contain movement." },
+      { text: "Multicloud visibility", correct: false, why: "Not one of the Zero Trust principles at all." },
+    ],
+    "Zero Trust's three principles are verify explicitly, use least privilege, and assume breach. Assume breach is the one that specifically drives segmentation and containment against lateral movement."
+  ),
+  match("concepts",
+    "Match each identity term to what it verifies or controls.",
+    [
+      { left: "Authentication", right: "Proves who the user (or device/app) is" },
+      { left: "Authorization", right: "Determines what an authenticated identity is allowed to do" },
+      { left: "Auditing", right: "Tracks and reports on identity-related activity after the fact" },
+      { left: "Administration", right: "Manages identity lifecycle, policies, and configuration — not runtime permissions" },
+    ],
+    "Authentication always happens first (who are you), authorization comes second (what can you do). Auditing records activity; administration configures the system itself."
+  ),
+  tf("concepts",
+    "Identity fundamentals — true or false?",
+    [
+      { text: "The auditing pillar includes alerts and detailed reports about identity usage.", answer: true, why: "Auditing exists specifically to log, alert on, and report identity activity." },
+      { text: "The administration pillar determines what a user can do once authenticated.", answer: false, why: "That's authorization's job. Administration manages accounts, policies, and configuration." },
+      { text: "An identity can represent a device, user, or application.", answer: true, why: "Modern identity extends to non-human entities like services, apps, and devices." },
+      { text: "Authentication must always occur after authorization.", answer: false, why: "It's reversed — authentication (who you are) always comes before authorization (what you can do)." },
+    ],
+    "These four pillars — identities, devices, apps/data, and the processes around them — work together, but each has a distinct job."
+  ),
+  mcq("concepts",
+    "Which two concepts are key elements of data compliance?",
+    [
+      { text: "Data residency", correct: true, why: "Residency concerns where data may legally be stored or processed." },
+      { text: "Shadow IT", correct: false, why: "A visibility/governance risk, not a compliance principle itself." },
+      { text: "Data sovereignty", correct: true, why: "Sovereignty concerns whose laws govern the data based on where it resides." },
+      { text: "Zero Trust", correct: false, why: "A security strategy, not a compliance requirement." },
+    ],
+    "Data residency (where data lives) and data sovereignty (whose laws apply to it) are the two compliance-specific concepts here; shadow IT and Zero Trust are security/governance concerns instead.",
+    2
+  ),
+  match("concepts",
+    "Match each Zero Trust foundational pillar to its description.",
+    [
+      { left: "Identities", right: "Verified with strong authentication, operating on least privilege" },
+      { left: "Devices", right: "Monitored for health and compliance to reduce the attack surface" },
+      { left: "Applications", right: "Discovered and access-controlled, including shadow IT" },
+      { left: "Data", right: "Classified, labeled, and encrypted based on sensitivity" },
+      { left: "Infrastructure", right: "Version control, configuration checks, and telemetry to detect attacks" },
+      { left: "Networks", right: "Segmentation, encryption, and real-time threat protection" },
+    ],
+    "Together these six pillars form Zero Trust's layered defense, covering every access point from the user to the network."
+  ),
+  mcq("concepts",
+    "Which three responsibilities always remain with the customer, across every cloud service model (IaaS, PaaS, SaaS)?",
+    [
+      { text: "Information and data", correct: true, why: "You always decide how your data is classified, protected, and backed up." },
+      { text: "Virtual network hardware", correct: false, why: "Physical/network hardware is always the provider's responsibility." },
+      { text: "Accounts and identities", correct: true, why: "You always control who can log in and what access they hold." },
+      { text: "Mobile devices and PCs", correct: true, why: "Customer-owned endpoints are always the customer's to secure." },
+      { text: "Physical data center security", correct: false, why: "Always the provider's responsibility, never the customer's." },
+    ],
+    "Across IaaS, PaaS, and SaaS, the customer never loses ownership of their data, identities, and endpoint devices — everything else shifts toward the provider as you move up the stack.",
+    3
+  ),
+  tf("concepts",
+    "Encryption and hashing basics — true or false?",
+    [
+      { text: "Symmetric encryption uses different keys for encryption and decryption.", answer: false, why: "Symmetric encryption uses one shared key for both operations." },
+      { text: "HTTPS is an example of encryption in transit.", answer: true, why: "HTTPS encrypts data as it moves between browser and server." },
+      { text: "Hashing is reversible and often used to decrypt passwords.", answer: false, why: "Hashing is one-way; it verifies data (like passwords) without ever being reversed." },
+      { text: "Asymmetric encryption uses a key pair — one to encrypt, one to decrypt.", answer: true, why: "A public key encrypts and only the matching private key can decrypt (or vice versa for signing)." },
+    ],
+    "Symmetric = one shared key (fast, but key distribution is the challenge). Asymmetric = public/private key pair. Hashing is one-way and used for integrity checks, not decryption."
+  ),
+  mcq("concepts",
+    "A company hosts a site under identity provider A. A user from domain B authenticates with identity provider B, and provider A accepts that token without a separate login. What concept enables this?",
+    [
+      { text: "Single sign-on", correct: false, why: "SSO typically works within one identity domain, not across separately trusted providers." },
+      { text: "Token signing", correct: false, why: "A technical mechanism for verifying a token, not the overarching trust concept." },
+      { text: "Federation", correct: true, why: "Federation creates a trust relationship between identity providers so tokens issued by one are accepted by another, without duplicate accounts." },
+      { text: "Authentication chaining", correct: false, why: "Not a standard identity concept." },
+    ],
+    "Federation lets organizations trust each other's identity providers, so users authenticate once with their home provider and access partner resources without a new login."
+  ),
+  mcq("concepts",
+    "You're explaining the shared responsibility model to a company moving from on-premises to SaaS. Which two statements are accurate?",
+    [
+      { text: "The customer manages physical hardware and networking in all cloud models", correct: false, why: "The provider owns physical infrastructure in PaaS and SaaS, and largely in IaaS too." },
+      { text: "The CSP handles more responsibility as you move from IaaS to SaaS", correct: true, why: "Provider responsibility increases steadily from IaaS through PaaS to SaaS." },
+      { text: "In SaaS, the customer is responsible for OS and infrastructure maintenance", correct: false, why: "One of SaaS's core benefits is that the provider handles the OS and infrastructure." },
+      { text: "The shared responsibility model helps clarify who secures what in each model", correct: true, why: "Its entire purpose is preventing security gaps by defining accountability clearly." },
+    ],
+    "As you move from IaaS to SaaS, the provider absorbs more of the stack. The shared responsibility model exists precisely to keep that division of duties explicit.",
+    2
+  ),
+  match("concepts",
+    "Match each encryption/hashing concept to its description.",
+    [
+      { left: "Symmetric encryption", right: "Uses the same key to encrypt and decrypt data" },
+      { left: "Asymmetric encryption", right: "Uses a public/private key pair — one encrypts, the other decrypts" },
+      { left: "Hashing", right: "Converts input into a unique, fixed-length value that can't be reversed" },
+      { left: "Salting", right: "Adds a random value before hashing so identical inputs produce different hashes" },
+    ],
+    "Symmetric is fast but requires secure key sharing; asymmetric solves that with two keys; hashing verifies integrity; salting defeats precomputed dictionary attacks."
+  ),
+  mcq("concepts",
+    "Which two examples show identity extending beyond human users in a modern enterprise?",
+    [
+      { text: "Assigning credentials to a thermostat that controls building temperature", correct: true, why: "Devices need their own verified identity so only trusted hardware operates on the network." },
+      { text: "Allowing IoT devices to bypass authentication for performance", correct: false, why: "This is a security flaw, not an example of extending identity — devices must still be verified." },
+      { text: "Controlling API access by assigning roles to an application", correct: true, why: "Applications, like users, need scoped permissions to interact with data and services." },
+      { text: "Replacing usernames with MAC addresses for all users", correct: false, why: "MAC addresses are easily spoofed and hardware-based, not a valid identity substitute." },
+    ],
+    "Identity today covers apps, services, and devices, not just people — but every one of them still needs verified credentials, never a bypass.",
+    2
+  ),
+  mcq("concepts",
+    "An engineering team hashes a file before and after uploading it to the cloud to confirm nothing changed in transit. What concept are they applying?",
+    [
+      { text: "Non-repudiation", correct: false, why: "That's about proving a sender can't deny sending something — unrelated to detecting change." },
+      { text: "Data residency", correct: false, why: "Concerns where data is stored, not whether it changed." },
+      { text: "Data integrity", correct: true, why: "Matching hash values before and after confirm the file's contents are unaltered." },
+      { text: "Authentication", correct: false, why: "Confirms identity, not whether data was modified." },
+    ],
+    "Comparing hash values is the textbook way to verify data integrity — that information remains accurate and unaltered during transfer."
+  ),
+  match("concepts",
+    "Match each term to how it fits into an identity's structure.",
+    [
+      { left: "Attributes", right: "The set of characteristics that define a user, device, or app (e.g., username, device ID)" },
+      { left: "Authentication", right: "Verifies those attributes to confirm the entity is who it claims to be" },
+      { left: "Authorization", right: "Uses the verified identity to decide what actions or resources are permitted" },
+    ],
+    "An identity is built from attributes, proven through authentication, and turned into access through authorization."
+  ),
+  mcq("concepts",
+    "A user can log in to an HR app successfully but can't view or edit employee records, and the admin confirms the credentials are correct. Which concept is restricting access?",
+    [
+      { text: "Authentication", correct: false, why: "Authentication clearly succeeded — the user logged in fine." },
+      { text: "Authorization", correct: true, why: "Authorization governs what a successfully authenticated user is allowed to do, like viewing or editing specific records." },
+      { text: "Auditing", correct: false, why: "Auditing tracks activity; it doesn't grant or block access." },
+      { text: "Administration", correct: false, why: "Administration manages accounts and policy configuration, not runtime access decisions." },
+    ],
+    "Since login worked but specific actions are blocked, the restriction is happening at the authorization layer, not authentication."
+  ),
+  mcq("concepts",
+    "A cloud app redirects a user to Microsoft Entra ID, which validates their identity and returns a token granting access. What role is Entra ID playing?",
+    [
+      { text: "A token validator", correct: false, why: "The application, not Entra ID, is the one that validates the token it receives." },
+      { text: "A federation gateway", correct: false, why: "Federation could apply in more complex multi-provider setups, but isn't what's described here." },
+      { text: "An identity provider", correct: true, why: "Entra ID authenticates the user and issues the token — the defining role of an identity provider." },
+      { text: "A domain controller", correct: false, why: "Domain controllers belong to on-premises Active Directory, not cloud authentication flows." },
+    ],
+    "Whenever a service verifies who a user is and issues proof of that (a token), it's acting as an identity provider."
+  ),
+  match("concepts",
+    "Match each term to its role in on-premises identity.",
+    [
+      { left: "Active Directory Domain Services (AD DS)", right: "A directory service storing user and device information on-premises" },
+      { left: "Domain controller", right: "The server running AD DS that authenticates and authorizes users" },
+    ],
+    "AD DS is the traditional, on-premises directory solution; the domain controller is the server that actually processes sign-in and access requests."
+  ),
+  match("concepts",
+    "Match each Microsoft Entra term to its meaning.",
+    [
+      { left: "Directory", right: "Stores identity objects like users, groups, and devices — the identity database itself" },
+      { left: "Tenant", right: "A dedicated instance of Entra ID for an organization; each tenant has exactly one directory" },
+    ],
+    "\"Directory\" and \"tenant\" are often used interchangeably because every tenant contains exactly one directory."
+  ),
+  mcq("concepts",
+    "Your security team wants to limit the damage an attacker could cause after gaining network access, and recommends network segmentation. What's the main Zero Trust benefit?",
+    [
+      { text: "It improves internet performance for employees", correct: false, why: "Segmentation is a security boundary, not a performance optimization." },
+      { text: "It ensures only Microsoft-managed services are used", correct: false, why: "Segmentation is a structural design choice, not a vendor restriction." },
+      { text: "It helps isolate compromised workloads to limit lateral movement", correct: true, why: "Dividing the network into smaller sections contains an attacker within one segment, sharply reducing blast radius." },
+      { text: "It reduces Azure subscription costs", correct: false, why: "Any cost savings would be an indirect side effect, not the purpose." },
+    ],
+    "Segmentation's core value in Zero Trust is containment — limiting how far an attacker can move once inside."
+  ),
+  mcq("concepts",
+    "Attackers are targeting build and deployment tools early in the development lifecycle, and traditional security models aren't catching it. What describes this threat pattern?",
+    [
+      { text: "Lateral movement in production environments", correct: false, why: "Lateral movement happens post-compromise, inside production — not during build/deploy." },
+      { text: "Perimeter-based firewall bypassing", correct: false, why: "A general network concern, not specific to CI/CD tooling." },
+      { text: "Shift-left attacks targeting DevOps infrastructure", correct: true, why: "Shift-left attacks exploit the earlier, often less-hardened build and deployment stages before code reaches production." },
+      { text: "Zero Trust misconfiguration in runtime containers", correct: false, why: "That's a runtime concern, not an early-pipeline one." },
+    ],
+    "Shift-left attacks specifically target CI/CD and build tooling, since attackers know DevOps pipelines are often under-hardened compared to production."
+  ),
+
+  // ===================== ENTRA =====================
+  mcq("entra",
+    "Your organization uses on-prem AD and is moving workloads to the cloud. You need a solution that synchronizes identities and provisions accounts so users can sign in once across both environments. What's the best fit?",
+    [
+      { text: "Microsoft Intune", correct: false, why: "Intune manages devices and apps, not identity synchronization." },
+      { text: "Microsoft Entra External ID", correct: false, why: "Built for external/customer collaboration, not syncing on-prem and cloud identities." },
+      { text: "Microsoft Entra Cloud Sync", correct: true, why: "Cloud Sync is purpose-built for hybrid identity, provisioning and synchronizing users/groups from on-prem AD to Entra ID." },
+      { text: "Microsoft Entra Identity Secure Score", correct: false, why: "Measures security posture; it doesn't sync anything." },
+    ],
+    "Cloud Sync bridges on-premises AD and Entra ID, giving users one identity across both environments."
+  ),
+  mcq("entra",
+    "Which two statements are true about Microsoft Entra custom banned password lists?",
+    [
+      { text: "They can include terms like brand names and locations", correct: true, why: "Admins add organization-specific terms — company names, products, office locations — to the list." },
+      { text: "They override the global banned password list", correct: false, why: "Custom lists are combined with the global list, not a replacement for it." },
+      { text: "They block variations of added terms", correct: true, why: "Fuzzy matching blocks close variants like leetspeak substitutions or added digits." },
+      { text: "They apply only to administrator accounts", correct: false, why: "They apply to all accounts in the tenant, not just admins." },
+    ],
+    "Custom banned password lists add fuzzy-matched, organization-specific terms on top of Microsoft's global list, and apply tenant-wide.",
+    2
+  ),
+  mcq("entra",
+    "Which authentication method supports both push notifications and generating time-based one-time passcodes for MFA?",
+    [
+      { text: "Microsoft Authenticator app", correct: true, why: "It supports push-based approval and can also act as a software OATH token generating TOTP codes." },
+      { text: "FIDO2 security key", correct: false, why: "Excellent for passwordless sign-in, but cannot generate OATH codes." },
+      { text: "OATH hardware token", correct: false, why: "Generates codes but has no push-notification capability." },
+      { text: "Windows Hello for Business", correct: false, why: "Biometric/PIN sign-in — no code generation or push notifications." },
+    ],
+    "Microsoft Authenticator is uniquely versatile, combining push approvals and OATH-based TOTP codes in one app."
+  ),
+  tf("entra",
+    "Microsoft Entra role assignment — true or false?",
+    [
+      { text: "The person who signs up for an Entra tenant automatically becomes Global Administrator.", answer: true, why: "First sign-up automatically grants the highest privilege level in the new tenant." },
+      { text: "Custom roles can be assigned only to individual users, not groups.", answer: false, why: "Custom roles can be assigned to both users and groups." },
+      { text: "The Exchange Administrator role is a built-in, service-specific Entra role.", answer: true, why: "It's built-in but scoped specifically to managing Exchange Online." },
+      { text: "The Compliance Administrator role controls access only within Microsoft Entra.", answer: false, why: "It spans multiple Microsoft 365 services, not just Entra." },
+    ],
+    "Roles range from tenant-wide (Global Admin) to service-specific (Exchange Admin) to cross-service (Compliance Admin) — and can be assigned to groups as well as users."
+  ),
+  mcq("entra",
+    "Which two are built-in Microsoft Entra roles?",
+    [
+      { text: "User Administrator", correct: true, why: "Manages users, groups, and related settings — resets passwords, assigns licenses, etc." },
+      { text: "Billing Administrator", correct: true, why: "Handles purchases, subscriptions, and billing support tickets." },
+      { text: "Virtual Machine Contributor", correct: false, why: "An Azure RBAC role for resource management, not an Entra identity role." },
+      { text: "Azure Policy Reader", correct: false, why: "Also an Azure RBAC role, not Entra." },
+      { text: "Exchange Key Manager", correct: false, why: "Not a recognized built-in Entra role." },
+    ],
+    "Entra roles govern identity and access; Azure RBAC roles govern resource management — they're two separate systems.",
+    2
+  ),
+  tf("entra",
+    "Entra ID governance features — true or false?",
+    [
+      { text: "Entra terms of use can be configured to apply based on user roles.", answer: true, why: "ToU can be targeted to specific users or attributes like role." },
+      { text: "Entitlement management only applies to internal users.", answer: false, why: "It also supports external users like partners and contractors." },
+      { text: "Access reviews can be set to recur quarterly.", answer: true, why: "Reviews can be scheduled weekly, monthly, quarterly, or annually." },
+      { text: "Privileged Identity Management automatically removes standard user access to applications.", answer: false, why: "PIM governs elevated/admin access, not everyday application permissions." },
+    ],
+    "Entitlement management, access reviews, and PIM each cover a distinct slice of the access lifecycle."
+  ),
+  mcq("entra",
+    "What happens when a user granted access through an entitlement management access package no longer has any valid assignment?",
+    [
+      { text: "Their account is permanently deleted", correct: false, why: "Removal from the directory may be followed by deletion later, per retention policy — but that's a separate step." },
+      { text: "They must manually request account deactivation", correct: false, why: "The process is automatic, with no manual request needed." },
+      { text: "They are automatically removed from the directory", correct: true, why: "Once all access package assignments expire, the account (typically a B2B guest) is removed automatically." },
+      { text: "They are added to an exception group", correct: false, why: "There's no such fallback exception group in this process." },
+    ],
+    "Entitlement management automates offboarding — no assignments left means automatic directory removal, no manual step required."
+  ),
+  tf("entra",
+    "Hybrid and multi-tenant Entra scenarios — true or false?",
+    [
+      { text: "Multi-tenant Entra configurations are ideal for mergers or cross-department setups.", answer: true, why: "Cross-tenant sync supports complex, multi-directory enterprise scenarios." },
+      { text: "Guest users can be limited from inviting others in B2B collaborations.", answer: true, why: "Guest invite permissions can be restricted for tighter control." },
+      { text: "Entra Identity Protection only evaluates risk based on user credentials.", answer: false, why: "It also factors in device signals, IP/location, and other threat signals." },
+      { text: "A custom banned password list can block company-specific words like brand names.", answer: true, why: "That's exactly what custom banned password lists are for." },
+    ],
+    "Identity Protection looks well beyond credentials alone, and multi-tenant setups are a common enterprise pattern for mergers."
+  ),
+  mcq("entra",
+    "You want on-premises password resets (via on-prem AD) to be checked against Microsoft Entra's banned password policy. What should you configure?",
+    [
+      { text: "Enable password writeback from cloud to on-premises", correct: false, why: "Writeback syncs cloud-initiated resets down to AD, but doesn't itself enforce Entra's password policy on-prem resets." },
+      { text: "Install Microsoft Entra ID Protection on user devices", correct: false, why: "Identity Protection isn't installed on devices and doesn't enforce password policy this way." },
+      { text: "Use the Microsoft Authenticator app only for cloud users", correct: false, why: "Doesn't address on-premises password policy enforcement at all." },
+      { text: "Integrate on-premises AD with Microsoft Entra password protection", correct: true, why: "This extends Entra's banned password list and rules to on-prem password changes, so weak or banned passwords are blocked everywhere." },
+    ],
+    "Integrating on-prem AD with Entra password protection is the specific feature that enforces consistent password policy in hybrid environments."
+  ),
+  mcq("entra",
+    "You're an identity admin at a company with many short-term contractors who retain app access after their engagement ends. You want that access to expire automatically without manual oversight. Which feature fits best?",
+    [
+      { text: "Entitlement management", correct: true, why: "It automates granting, reviewing, and expiring access — e.g., a 30-day contractor's access can expire automatically." },
+      { text: "Microsoft Entra terms of use", correct: false, why: "Confirms policy acknowledgment; doesn't manage or expire access." },
+      { text: "Access reviews", correct: false, why: "Helps periodically check who still needs access, but relies on someone acting on the review." },
+      { text: "Privileged Identity Management", correct: false, why: "Focused on elevated/admin roles, not lifecycle access for external or temporary users." },
+    ],
+    "Entitlement management is purpose-built for automated onboarding and offboarding, removing the need for manual tracking."
+  ),
+  mcq("entra",
+    "An organization uses Workday as its HR system and wants a new employee's identity created automatically before their first day. What feature supports this?",
+    [
+      { text: "User provisioning", correct: false, why: "Provisions users into external SaaS apps — it assumes the identity already exists in Entra ID." },
+      { text: "Entitlement management", correct: false, why: "Automates access assignment/expiration, but only after the identity already exists." },
+      { text: "Inbound provisioning", correct: true, why: "Creates the identity in Entra ID directly from an authoritative HR source like Workday, ahead of day one." },
+      { text: "Lifecycle workflows", correct: false, why: "Automates tasks like group membership after an identity already exists." },
+    ],
+    "Inbound provisioning is specifically the step that creates the identity itself from HR data, before any other lifecycle automation can run."
+  ),
+  mcq("entra",
+    "Which two actions can Microsoft Security Copilot help identity admins perform?",
+    [
+      { text: "Summarize a user's risk level using natural language", correct: true, why: "Copilot can explain, in plain language, why a user is flagged as risky." },
+      { text: "Build lifecycle workflows to manage access", correct: true, why: "Copilot can guide setup of onboarding/offboarding lifecycle workflows." },
+      { text: "Create access packages for external users", correct: false, why: "That's an entitlement management function, not something Copilot performs." },
+      { text: "Manually approve PIM requests", correct: false, why: "PIM approvals happen inside Privileged Identity Management, not through Copilot." },
+    ],
+    "Copilot assists identity admins with explanation and workflow guidance, not with performing entitlement or PIM approval actions itself.",
+    2
+  ),
+  mcq("entra",
+    "Which two statements correctly describe device identity types in Microsoft Entra ID?",
+    [
+      { text: "Entra registered devices are organization-owned and joined to on-prem AD", correct: false, why: "Registered devices are typically personal/BYOD, not organization-owned or AD-joined." },
+      { text: "Entra joined devices are cloud-only and managed by the organization", correct: true, why: "Entra join is fully cloud-native — no on-prem AD dependency." },
+      { text: "Entra hybrid joined devices exist in both AD DS and Entra ID", correct: true, why: "Hybrid join means a device is joined to on-prem AD and synced to Entra ID." },
+      { text: "Entra registered devices are configured exclusively through Intune", correct: false, why: "Devices can be registered without being enrolled in Intune." },
+    ],
+    "Joined = organization-owned and managed (cloud-only or hybrid); registered = typically personal devices with limited access.",
+    2
+  ),
+  mcq("entra",
+    "Which two actions are supported by Microsoft Entra access reviews?",
+    [
+      { text: "Create multi-stage reviews for group memberships", correct: true, why: "Up to a sequence of reviewers (e.g., self, then manager, then resource owner) can validate access." },
+      { text: "Force password resets for expired accounts", correct: false, why: "That's handled by password policies or SSPR, not access reviews." },
+      { text: "Automatically remove access if no response is received", correct: true, why: "If a reviewer doesn't respond by the deadline, access can be configured to auto-remove." },
+      { text: "Assign guest users to conditional access policies", correct: false, why: "That's a Conditional Access configuration task, not an access review function." },
+    ],
+    "Access reviews focus on evaluating and automating access decisions — not password management or policy assignment.",
+    2
+  ),
+  mcq("entra",
+    "Which two statements correctly describe how Microsoft Entra ID can be used in different organizational environments?",
+    [
+      { text: "It can operate independently without syncing to on-premises systems", correct: true, why: "Entra ID works as a standalone cloud identity provider with no on-prem dependency." },
+      { text: "It only supports SaaS applications", correct: false, why: "It also supports custom, mobile, and on-premises applications." },
+      { text: "It can synchronize with Active Directory using Cloud Sync", correct: true, why: "Cloud Sync enables hybrid identity, replicating on-prem accounts to the cloud." },
+      { text: "It requires an Azure subscription to use basic identity features", correct: false, why: "Basic identity capabilities come with Microsoft 365/Dynamics subscriptions — no separate Azure subscription needed." },
+    ],
+    "Entra ID is flexible: cloud-only or hybrid, and not limited to SaaS or to customers with an Azure subscription.",
+    2
+  ),
+  mcq("entra",
+    "You want to restrict access to a sensitive SharePoint library unless users are on a managed device and accept terms of use. What Conditional Access feature fits?",
+    [
+      { text: "Authentication context", correct: true, why: "Lets you apply granular access requirements (managed device, ToU) to a specific resource within an app, like one SharePoint library." },
+      { text: "Device platform", correct: false, why: "Only evaluates OS type, not additional requirements like managed device + ToU." },
+      { text: "Global Secure Access app", correct: false, why: "A network access solution for private resources, not resource-level policy enforcement." },
+      { text: "Sign-in risk condition", correct: false, why: "Detects suspicious sign-in behavior, not a way to gate a specific document library." },
+    ],
+    "Authentication context is the tool for applying precise, resource-level Conditional Access rules within an application."
+  ),
+  mcq("entra",
+    "An administrator needs to detect sign-ins to unfamiliar external tenants, device inconsistencies, and unhealthy remote networks. What tool provides this?",
+    [
+      { text: "Global Secure Access dashboard", correct: true, why: "Aggregates cross-tenant sign-in, device, and network health signals into one holistic view." },
+      { text: "Conditional Access logs", correct: false, why: "Only shows policy allow/block decisions, not broader anomaly or network profiling." },
+      { text: "Microsoft Defender for Endpoint", correct: false, why: "Focused on device/endpoint threats, not sign-in or tenant-level analysis." },
+      { text: "Microsoft Entra audit logs", correct: false, why: "Tracks admin/sign-in events, but lacks deep anomaly and network profiling." },
+    ],
+    "The Global Secure Access dashboard is built specifically for cross-tenant and network-health visibility."
+  ),
+  mcq("entra",
+    "A workforce tenant manages employees and internal resources. What's an external tenant designed for?",
+    [
+      { text: "Managing internal Group Policy settings", correct: false, why: "Group Policy is an on-prem AD concept unrelated to tenant types." },
+      { text: "Consumer and business customer access", correct: true, why: "External tenants are built for customer-facing scenarios, distinct from internal org structure." },
+      { text: "Synchronizing with on-prem AD", correct: false, why: "That's the role of hybrid identity/Cloud Sync, not what defines an external tenant." },
+      { text: "Managing conditional access policies exclusively", correct: false, why: "Conditional Access applies across tenant types, not exclusive to external tenants." },
+    ],
+    "Workforce tenants serve employees and internal business needs; external tenants serve consumer or business-customer identities."
+  ),
+  tf("entra",
+    "Entra hybrid identity and governance — true or false?",
+    [
+      { text: "Microsoft Entra ID supports synchronization with on-premises Active Directory.", answer: true, why: "Tools like Entra Connect/Cloud Sync enable hybrid identity." },
+      { text: "Managed identities require developers to manage and rotate credentials manually.", answer: false, why: "Managed identities exist to eliminate manual credential management entirely." },
+      { text: "Microsoft Entra Secure Score helps measure and improve identity security posture.", answer: true, why: "Secure Score surfaces identity risks and recommended improvements." },
+      { text: "A Microsoft 365 group can contain both users and devices.", answer: false, why: "M365 groups are for user collaboration; devices belong to security groups instead." },
+    ],
+    "Hybrid sync, automated credential management, and posture scoring are all real Entra capabilities — but group types have specific, separate purposes."
+  ),
+  tf("entra",
+    "Authentication methods — true or false?",
+    [
+      { text: "Microsoft Entra ID supports both software and hardware OATH tokens for MFA.", answer: true, why: "Both token types are supported for MFA or SSPR." },
+      { text: "Windows Hello for Business is supported only as a secondary authentication method.", answer: false, why: "It can serve as either a primary or secondary method." },
+      { text: "Security questions can be used by administrator accounts during password reset.", answer: false, why: "Admin accounts require stronger verification; security questions aren't allowed for them." },
+      { text: "MFA relies on at least two of: something you know, something you have, something you are.", answer: true, why: "This is the foundational definition of multi-factor authentication." },
+    ],
+    "Understanding which methods are flexible (Windows Hello) versus restricted (security questions for admins) is key to Entra authentication design."
+  ),
+
+  // ===================== SECURITY =====================
+  tf("security",
+    "Azure Network Security Groups (NSGs) — true or false?",
+    [
+      { text: "An NSG can be assigned to multiple virtual machine network interfaces.", answer: true, why: "One NSG can be linked to many interfaces or subnets for centralized filtering." },
+      { text: "NSG rules are processed in descending priority order.", answer: false, why: "They're processed in ascending order — lower priority numbers are evaluated first." },
+      { text: "Default NSG rules cannot be deleted.", answer: true, why: "Built-in default rules are permanent, though they can be overridden by higher-priority custom rules." },
+      { text: "You must remove default NSG rules before adding custom rules.", answer: false, why: "Custom rules simply take precedence based on priority — no removal needed (and default rules can't be deleted anyway)." },
+    ],
+    "Lower number = higher priority = evaluated first. Defaults are permanent but can be overridden."
+  ),
+  mcq("security",
+    "Your public-facing web app suffers performance degradation from traffic spikes too small to trigger Azure's default DDoS protection. You need detailed telemetry and faster, tailored mitigation. What should you do?",
+    [
+      { text: "Enable Azure Monitor diagnostics and scale the app service", correct: false, why: "May help performance temporarily, but doesn't stop malicious traffic." },
+      { text: "Switch to a different Azure region with lower latency", correct: false, why: "Doesn't address the root cause of a DDoS-style spike." },
+      { text: "Enable Azure DDoS IP Protection for WAF discounts", correct: false, why: "IP Protection is the basic tier and lacks the advanced telemetry of Network Protection." },
+      { text: "Onboard to Azure DDoS Network Protection for app-specific defense and telemetry", correct: true, why: "Network Protection adds app-level defenses, detailed attack telemetry, and faster tailored mitigation beyond the free basic tier." },
+    ],
+    "The basic DDoS tier targets very large attacks; Network Protection is what adds granular telemetry and tuned mitigation for smaller, disruptive spikes."
+  ),
+  mcq("security",
+    "Which three types of DDoS attacks does Azure DDoS Protection mitigate?",
+    [
+      { text: "Volumetric attacks", correct: true, why: "Floods the network layer with massive traffic (e.g., UDP floods); Azure absorbs and scrubs it at scale." },
+      { text: "Network/protocol layer attacks", correct: true, why: "Exploits weaknesses in layer 3/4 protocols (e.g., SYN floods)." },
+      { text: "Application layer (Layer 7) attacks", correct: false, why: "Layer 7 attacks like SQL injection or XSS require a Web Application Firewall, not DDoS Protection alone." },
+      { text: "Resource (application) layer attacks", correct: true, why: "Per Microsoft's own documentation, resource-layer attacks are one of the three categories Azure DDoS Protection covers." },
+      { text: "DNS poisoning attacks", correct: false, why: "A spoofing attack, not a denial-of-service method." },
+    ],
+    "Confirmed against Microsoft Learn: Azure DDoS Protection mitigates volumetric, protocol, and resource-layer attacks. Full Layer-7 web attacks still need a WAF.",
+    3
+  ),
+  tf("security",
+    "Microsoft Defender for Cloud coverage — true or false?",
+    [
+      { text: "Microsoft Defender for Cloud supports DevOps security management across multiple pipelines.", answer: true, why: "It can unify policy enforcement across tools like GitHub Actions and Azure DevOps." },
+      { text: "CSPM features require a separate installation of Microsoft Sentinel.", answer: false, why: "Cloud Security Posture Management is built into Defender for Cloud directly." },
+      { text: "CWPP focuses on protecting specific workloads like containers and databases.", answer: true, why: "Cloud Workload Protection Platform provides tailored protection per workload type." },
+      { text: "Defender for Cloud cannot be used for on-premises environments.", answer: false, why: "Azure Arc extends Defender for Cloud protection to on-premises and multicloud resources." },
+    ],
+    "Defender for Cloud spans posture management (CSPM), workload protection (CWPP), and hybrid coverage via Arc — no separate Sentinel install required."
+  ),
+  mcq("security",
+    "Which two Microsoft Sentinel features help visualize and enrich threat detection?",
+    [
+      { text: "Watchlists", correct: true, why: "User-defined lists (e.g., terminated employees, high-value assets) that enrich correlation and detection context." },
+      { text: "Workbooks", correct: true, why: "Interactive dashboards for visualizing Sentinel data in real time." },
+      { text: "Azure Front Door", correct: false, why: "A global load-balancing/delivery service, unrelated to Sentinel analytics." },
+      { text: "VPN Gateway", correct: false, why: "Provides encrypted connectivity, not threat visualization." },
+    ],
+    "Watchlists add detection context; workbooks turn raw data into visual insight — together they enrich and visualize threats.",
+    2
+  ),
+  tf("security",
+    "Microsoft Defender for Endpoint — true or false?",
+    [
+      { text: "The API Explorer lets admins run sample queries and explore capabilities.", answer: true, why: "It's an interactive tool for testing Defender for Endpoint APIs." },
+      { text: "Endpoint Detection and Response is used only for preventative control settings.", answer: false, why: "EDR is primarily about investigating and responding to threats after they occur." },
+      { text: "The Defender for Endpoint portal allows configuration of security policies and device risk management.", answer: true, why: "The portal centralizes policy configuration and device risk visibility." },
+      { text: "Next-generation protection includes heuristic and behavior-based detection.", answer: true, why: "It combines cloud intelligence, heuristics, and behavioral analysis to catch known and unknown threats." },
+    ],
+    "EDR is a post-detection investigation and response capability, distinct from the preventative controls of next-gen protection and attack surface reduction."
+  ),
+  tf("security",
+    "Network and application security basics — true or false?",
+    [
+      { text: "Botnets are often made up of normal users' computers that have been compromised.", answer: true, why: "Botnets typically consist of everyday infected machines controlled remotely by an attacker." },
+      { text: "Azure NSGs can only be applied at the subnet level.", answer: false, why: "NSGs can also be applied directly to network interfaces for more granular control." },
+      { text: "Subnets within the same virtual network can communicate by default.", answer: true, why: "Unless custom rules block it, subnets in the same VNet auto-route to each other." },
+      { text: "Azure WAF only protects against SQL injection attacks.", answer: false, why: "It also defends against cross-site scripting and other OWASP Top 10 threats." },
+    ],
+    "Understanding default connectivity within a VNet, and WAF's broader OWASP coverage, is core to Azure network security."
+  ),
+  mcq("security",
+    "A junior analyst asks Security Copilot a question, then follows up with more queries, and Copilot keeps context while combining multiple capabilities into one answer. What is this called?",
+    [
+      { text: "A plug-in, where the user input is an orchestrator", correct: false, why: "Plugins are individual integrations, not the overall conversation structure." },
+      { text: "An agent session, where the prompt is a plug-in", correct: false, why: "Confuses agent tooling with the ordinary conversational session structure." },
+      { text: "A session, where prompts are entered and the orchestrator composes capabilities", correct: true, why: "A session is the ongoing conversational flow; the orchestrator combines the right capabilities behind the scenes to answer each prompt." },
+      { text: "Workspace switching and incident processing", correct: false, why: "Workspace switching means moving between tenants/environments, unrelated to this scenario." },
+    ],
+    "Copilot's \"session\" concept keeps context across follow-up prompts while its orchestrator assembles the needed tools each time."
+  ),
+  mcq("security",
+    "Your team is tracking a coordinated phishing campaign and wants to see its full scope and remediate directly from Microsoft 365. What tool fits?",
+    [
+      { text: "Threat Explorer", correct: true, why: "Shows the complete scope of an email-based campaign — affected users, delivered messages — and supports direct remediation like bulk deletion." },
+      { text: "Policies and rules", correct: false, why: "Defines settings; not built for active incident investigation." },
+      { text: "Attack simulation training", correct: false, why: "Educates users with simulated (not real) phishing, unrelated to responding to an actual campaign." },
+      { text: "Audit log search", correct: false, why: "Shows activity logs, but not campaign-level threat analysis." },
+    ],
+    "Threat Explorer is the real-time investigation and remediation tool purpose-built for active email threats like phishing campaigns."
+  ),
+  mcq("security",
+    "Which two capabilities are part of Microsoft Security Exposure Management in the Defender portal?",
+    [
+      { text: "Send identity protection notifications via Entra ID", correct: false, why: "That's Entra ID Protection's job, not Exposure Management." },
+      { text: "Simulate attack paths to visualize potential vulnerabilities", correct: true, why: "Models how an attacker could move through the environment via exploitable weaknesses." },
+      { text: "Generate a company-wide secure score and track improvement actions", correct: true, why: "Consolidates security metrics into a score with recommended actions." },
+      { text: "Deploy firewall rules across Microsoft Defender for Endpoint", correct: false, why: "That's an Endpoint configuration task, unrelated to Exposure Management." },
+    ],
+    "Exposure Management combines attack-path simulation with measurable secure-score tracking to proactively strengthen defenses.",
+    2
+  ),
+  mcq("security",
+    "You need to protect a web app from SQL injection and XSS with minimal manual configuration and automatic rule updates. What's the best fit?",
+    [
+      { text: "Azure Firewall", correct: false, why: "Operates at the network level and doesn't address app-specific vulnerabilities." },
+      { text: "Azure Web Application Firewall (WAF)", correct: true, why: "Built specifically for OWASP Top 10 threats with automatically updated rules — minimal ongoing maintenance." },
+      { text: "Azure Firewall Manager", correct: false, why: "A central management tool for firewall instances, not a security engine for apps." },
+      { text: "Network Security Group (NSG)", correct: false, why: "Controls transport-layer traffic only — no application-layer protection." },
+    ],
+    "Azure WAF is purpose-built for automatic, low-maintenance protection against common web app exploits."
+  ),
+  mcq("security",
+    "Which two Microsoft Sentinel features reduce the time it takes to detect and respond to security threats?",
+    [
+      { text: "Manual investigation of log data", correct: false, why: "Slow and labor-intensive — the opposite of reducing response time." },
+      { text: "Security playbooks (built on Logic Apps)", correct: true, why: "Automates response actions like disabling accounts or blocking IPs, without manual delay." },
+      { text: "Proactive threat hunting", correct: true, why: "Uncovers hidden threats before automated alerts even fire, cutting attacker dwell time." },
+      { text: "Periodic compliance scoring", correct: false, why: "Focused on governance, not real-time detection or response." },
+      { text: "Resource tagging", correct: false, why: "Useful for organization, but doesn't speed up detection or response." },
+    ],
+    "Playbooks automate the response side; proactive hunting shortens the detection side — together they cut the time-to-resolve.",
+    2
+  ),
+  mcq("security",
+    "Which two capabilities help you monitor and control OAuth apps with excessive permissions in your organization?",
+    [
+      { text: "Cloud app catalog", correct: false, why: "Lists known apps but doesn't evaluate their permission levels." },
+      { text: "App governance", correct: true, why: "Purpose-built to monitor OAuth-enabled apps and flag excessive or risky permissions." },
+      { text: "Cloud discovery", correct: false, why: "Identifies shadow IT/SaaS usage broadly, not OAuth permission behavior specifically." },
+      { text: "Information protection", correct: false, why: "Handles labeling/encryption of data, not app behavior." },
+    ],
+    "App governance is the feature purpose-built for evaluating and managing OAuth app permissions and behavior.",
+    1
+  ),
+  order("security",
+    "Arrange the typical steps for investigating a security incident in the Microsoft Defender portal.",
+    [
+      "View the incident from Incidents & alerts",
+      "Analyze associated alerts and affected assets",
+      "Launch advanced hunting queries to explore further",
+      "Take response actions in the Action Center",
+      "Review the incident summary (and Security Copilot, if enabled)",
+    ],
+    "This flow moves from initial triage to deep investigation to action to a final AI-assisted summary — a structured playbook for consistent incident handling."
+  ),
+  mcq("security",
+    "Your dev team uses several API keys and passwords and wants them centrally managed with secure retrieval, not embedded in code. What's the best fit?",
+    [
+      { text: "Store secrets in a secure folder within the application repository", correct: false, why: "Repository access can still be compromised — this doesn't remove the risk." },
+      { text: "Use Azure Key Vault and reference secrets using object identifiers", correct: true, why: "Key Vault centralizes secret storage; apps retrieve secrets at runtime via identifiers instead of hardcoding them." },
+      { text: "Use Azure Monitor to collect and encrypt secrets", correct: false, why: "Monitor collects telemetry/logs — it isn't designed for secret storage." },
+      { text: "Enable Microsoft Defender to scan and store secrets automatically", correct: false, why: "Defender detects threats; it doesn't provide structured secrets management." },
+    ],
+    "Azure Key Vault is the purpose-built service for centrally managing and securely retrieving application secrets."
+  ),
+  mcq("security",
+    "Your team wants AI-assisted guidance to understand security recommendations, their impact, and remediation, directly inside Defender for Cloud. What feature enables this?",
+    [
+      { text: "Microsoft Azure Advisor", correct: false, why: "Focuses on cost, performance, and operational excellence, not AI-driven security remediation." },
+      { text: "Azure Monitor Workbook Templates", correct: false, why: "Good for visualization, not AI-guided remediation." },
+      { text: "Custom policy initiatives with Azure Policy", correct: false, why: "Strong for compliance enforcement, but lacks interactive AI explanation." },
+      { text: "Microsoft Security Copilot embedded in Defender for Cloud", correct: true, why: "Uses generative AI to explain recommendations, impact, and remediation steps directly within Defender for Cloud." },
+    ],
+    "Security Copilot's embedded experience is what adds the AI-driven explain-and-remediate layer to Defender for Cloud."
+  ),
+  mcq("security",
+    "A SOC analyst gets a high-priority alert about lateral movement across endpoints and wants full breach scope, associated alerts, and remediation — all from one platform. What fits?",
+    [
+      { text: "Endpoint Detection and Response (EDR)", correct: true, why: "Provides real-time detection, alert context, and a centralized way to trace attacker movement and remediate." },
+      { text: "Microsoft Threat Experts", correct: false, why: "A managed hunting service that supports the team, but isn't the direct investigation interface." },
+      { text: "Attack surface reduction", correct: false, why: "Focused on prevention/hardening, not tracking an active breach." },
+      { text: "Microsoft Defender Antivirus", correct: false, why: "Mainly malware prevention, without advanced investigation workflows." },
+    ],
+    "EDR is the go-to platform for tracing an active breach's scope and coordinating a response, all in one place."
+  ),
+  mcq("security",
+    "Which two Defender for Endpoint capabilities help reduce risk before an attack occurs?",
+    [
+      { text: "Attack surface reduction", correct: true, why: "Proactively limits entry points via configuration and exploit mitigation, like blocking suspicious scripts." },
+      { text: "Microsoft Threat Experts", correct: false, why: "A post-attack hunting/investigation service, not a preventive capability." },
+      { text: "Next-generation protection", correct: true, why: "Uses real-time heuristics, cloud intelligence, and ML to predict and stop even new attack variants." },
+      { text: "Endpoint Detection and Response (EDR)", correct: false, why: "Detects and remediates after an attack, not before." },
+    ],
+    "Attack surface reduction and next-gen protection are the preventive layer; EDR and Threat Experts operate after the fact.",
+    2
+  ),
+  mcq("security",
+    "A privacy analyst manually tracks data-use evaluations via forms and spreadsheets, which is error-prone. Which Microsoft Priva feature should they adopt?",
+    [
+      { text: "Compliance score", correct: false, why: "Measures overall compliance posture, but doesn't automate privacy-specific evaluations." },
+      { text: "Privacy assessments", correct: true, why: "Automates discovering, documenting, and evaluating personal data usage, replacing manual forms and spreadsheets." },
+      { text: "Azure Monitor", correct: false, why: "Focused on infrastructure health, not privacy tracking." },
+      { text: "Penetration testing dashboard", correct: false, why: "Related to security testing, not ongoing privacy assessment." },
+    ],
+    "Privacy assessments centralize and automate the exact manual workflow the analyst is currently doing by hand."
+  ),
+  match("security",
+    "Match each Microsoft Sentinel capability to its description.",
+    [
+      { left: "Playbooks", right: "Automates threat response using Logic Apps-based workflows" },
+      { left: "Hunts", right: "Provides proactive threat hunting using pre-built or custom queries" },
+      { left: "Advanced Security Information Model (ASIM)", right: "Normalizes and unifies data from diverse sources for consistent analysis" },
+      { left: "Content hub", right: "Enables packaged content integration — connectors, rules, and playbooks" },
+    ],
+    "Playbooks automate, hunts investigate proactively, ASIM standardizes data, and the content hub packages it all for easy deployment."
+  ),
+  match("security",
+    "Match each Microsoft Defender Vulnerability Management capability to its function.",
+    [
+      { left: "Asset discovery and monitoring", right: "Identifies software, certificates, and extensions across your environment" },
+      { left: "Risk-based intelligent prioritization", right: "Uses threat intelligence and breach predictions to focus on high-risk vulnerabilities" },
+      { left: "Remediation and tracking", right: "Sends remediation tasks to Intune or blocks risky apps" },
+      { left: "Baseline assessments", right: "Tracks security baseline compliance against industry standards" },
+      { left: "Weaknesses page", right: "Provides a single list of CVEs with severity and related insights" },
+    ],
+    "Together these capabilities form an intelligence-driven cycle: discover, prioritize, assess against baselines, and remediate."
+  ),
+  mcq("security",
+    "Which two features are shown in the Security Copilot usage monitoring dashboard?",
+    [
+      { text: "Plugins used in each session", correct: true, why: "Gives admins visibility into which plugins/features were actually used." },
+      { text: "Stores historical session chat logs indefinitely", correct: false, why: "Only about 90 days of activity is retained, not indefinitely." },
+      { text: "Allows filtering and export of usage data", correct: true, why: "Supports segmenting by workspace/session and exporting up to 90 days of activity." },
+      { text: "Identifies users by password for each session", correct: false, why: "User activity is tracked by identity, never by password." },
+    ],
+    "The dashboard shows plugin usage and supports filterable, exportable reporting — within a 90-day retention window.",
+    2
+  ),
+  tf("security",
+    "Sentinel and Defender portal integration — true or false?",
+    [
+      { text: "Microsoft Sentinel can be accessed only through the Azure portal.", answer: false, why: "It's also accessible via the unified Microsoft Defender portal." },
+      { text: "The Microsoft Defender portal brings together Sentinel, Defender XDR, and Copilot.", answer: true, why: "The Defender portal is designed as the single hub for these tools." },
+      { text: "Sentinel and Defender XDR share incident and advanced hunting features in the unified security operations platform.", answer: true, why: "Integration lets analysts investigate across both platforms with shared views." },
+      { text: "Security Copilot cannot assist in Microsoft Sentinel investigations.", answer: false, why: "Copilot provides natural-language assistance for Sentinel investigations directly in the Defender portal." },
+    ],
+    "The unified Defender portal is designed to combine Sentinel, Defender XDR, and Copilot into one cohesive operations experience."
+  ),
+  match("security",
+    "Match each Defender portal section to its purpose.",
+    [
+      { left: "Assets tab", right: "Displays devices and identities across your organization" },
+      { left: "Learning hub", right: "Provides access to Microsoft Learn content and training resources" },
+    ],
+    "Assets gives visibility into what's protected; the learning hub keeps teams current on best practices."
+  ),
+  mcq("security",
+    "Your company hosts multiple VNets across subscriptions and needs centralized inbound/outbound traffic control, rule enforcement, and malicious domain inspection with minimal overhead. Which two actions fit?",
+    [
+      { text: "Deploy Azure Firewall on each VNet individually", correct: false, why: "Increases complexity and cost without improving protection over a centralized approach." },
+      { text: "Deploy Azure Firewall in a centralized VNet to route traffic through it", correct: true, why: "One firewall instance managing traffic for many VNets reduces overhead and keeps rules consistent." },
+      { text: "Enable Azure Firewall threat intelligence to block known malicious IPs/domains", correct: true, why: "Automatically blocks known-bad domains and IPs, without manual rule updates." },
+      { text: "Use Azure DDoS Protection for application-layer protocol filtering", correct: false, why: "DDoS Protection targets network-level attacks, not app-layer protocol filtering." },
+    ],
+    "Centralizing the firewall and turning on threat intelligence gives you scale and automated protection with minimal admin overhead.",
+    2
+  ),
+  mcq("security",
+    "Which Defender portal feature gives your SOC team personalized, evolving recommendations to get more value from Microsoft security tools over time?",
+    [
+      { text: "Secure score", correct: false, why: "Measures technical posture, not operational/process effectiveness." },
+      { text: "Learning hub", correct: false, why: "Training content, not real-time operational guidance." },
+      { text: "SOC optimization", correct: true, why: "Acts like a continuous coach, adapting recommendations as your environment and usage evolve." },
+      { text: "Partner catalog", correct: false, why: "Lists available integrations, not day-to-day process guidance." },
+    ],
+    "SOC optimization is specifically the feature focused on ongoing operational effectiveness, not just technical scoring."
+  ),
+  tf("security",
+    "Sentinel workflow types — true or false?",
+    [
+      { text: "Workbooks in Sentinel allow analysts to visualize security data and trends.", answer: true, why: "Workbooks are the dashboard/visualization layer." },
+      { text: "Playbooks are used for querying threat data across logs.", answer: false, why: "Querying is the job of hunting queries; playbooks automate response actions." },
+      { text: "Microsoft Sentinel can correlate data from AWS, GCP, and on-prem environments.", answer: true, why: "Sentinel is built for multicloud and hybrid data correlation." },
+      { text: "A semi-automated response in Sentinel means analysts review the response before it's executed.", answer: true, why: "Semi-automated response builds in a human approval step before action." },
+    ],
+    "Workbooks visualize, hunting queries investigate, and playbooks act — Sentinel supports full or reviewed (semi-automated) automation."
+  ),
+  mcq("security",
+    "Which two risks can Microsoft Defender for Identity detect in a hybrid environment?",
+    [
+      { text: "Lateral movement by attackers", correct: true, why: "Analyzes domain-controller signals to spot unauthorized movement within the network." },
+      { text: "Unsafe file sharing", correct: false, why: "Monitored by Defender for Cloud Apps, not Defender for Identity." },
+      { text: "Malicious insider activity", correct: true, why: "Behavioral analytics flag unusual patterns, like accessing systems at odd times." },
+      { text: "Compromised OAuth tokens", correct: false, why: "Handled by identity protection tools, not Defender for Identity." },
+      { text: "Suspicious DNS resolution", correct: false, why: "Falls under Defender for DNS/Endpoint." },
+    ],
+    "Defender for Identity's strength is Active Directory-based signals: lateral movement and insider threat detection.",
+    2
+  ),
+  tf("security",
+    "Defender XDR ecosystem — true or false?",
+    [
+      { text: "Defender XDR solutions can share threat signals for broader visibility.", answer: true, why: "Integration across endpoints, identity, and cloud gives a fuller threat picture." },
+      { text: "Attack simulation tools in Defender for Office 365 can test user response to phishing.", answer: true, why: "Simulated phishing helps build user awareness and readiness." },
+      { text: "You can use Defender for Cloud Apps to auto-revoke external sharing permissions.", answer: true, why: "Governance policies can automatically revoke risky external sharing." },
+      { text: "Defender Threat Intelligence only supports Windows-based vulnerabilities.", answer: false, why: "It tracks CVEs and threats across multiple platforms, not just Windows." },
+    ],
+    "Defender's ecosystem is cross-platform by design, sharing signals and automating governance across products."
+  ),
+  mcq("security",
+    "Which two risks can Microsoft Defender for Identity detect in a hybrid environment? (variant)",
+    [
+      { text: "Lateral movement by attackers", correct: true, why: "Core capability, based on AD domain-controller signal analysis." },
+      { text: "Malicious insider activity", correct: true, why: "Detected through behavioral analytics on unusual access patterns." },
+      { text: "Unsafe file sharing", correct: false, why: "That's Defender for Cloud Apps territory." },
+      { text: "Suspicious DNS resolution", correct: false, why: "Falls under Defender for DNS or Endpoint, not Identity." },
+    ],
+    "This reinforces Defender for Identity's scope: AD-based lateral movement and insider threat detection.",
+    2
+  ),
+  mcq("security",
+    "Which three benefits does Azure Web Application Firewall (WAF) provide?",
+    [
+      { text: "Centralized protection against web application threats", correct: true, why: "Applies consistent security rules across multiple web apps." },
+      { text: "Real-time patching of application vulnerabilities in code", correct: false, why: "WAF blocks exploit attempts; it doesn't patch underlying application code." },
+      { text: "Detection of HTTP-based DDoS attacks", correct: true, why: "WAF operates at Layer 7 and can identify HTTP flood-style DDoS patterns." },
+      { text: "Faster response time to known exploits", correct: true, why: "New rules or OWASP-based protections can be applied quickly, without code changes." },
+      { text: "Infrastructure-level protection for Layer 3 DDoS attacks", correct: false, why: "That's Azure DDoS Protection's job, not WAF's." },
+    ],
+    "WAF is an application-layer defense — it doesn't patch code and isn't a Layer 3/4 DDoS tool.",
+    3
+  ),
+  mcq("security",
+    "Which two are characteristics of default rules in an Azure Network Security Group?",
+    [
+      { text: "They can be deleted if needed", correct: false, why: "Default rules are permanent and can't be deleted, only overridden." },
+      { text: "They have predefined priority values", correct: true, why: "Priority values determine evaluation order, with lower numbers evaluated first." },
+      { text: "They allow traffic based on protocol and port", correct: true, why: "Default rules specify allow/deny per protocol and port." },
+      { text: "They deny all outbound traffic by default", correct: false, why: "Default outbound rules allow traffic unless no match is found." },
+    ],
+    "Default NSG rules are permanent, priority-ordered, and protocol/port-based — not a blanket deny.",
+    2
+  ),
+  mcq("security",
+    "You need secure remote access to Azure VMs without exposing RDP/SSH ports or managing separate clients/public IPs. What's the best fit?",
+    [
+      { text: "Configure a jump box with a public IP", correct: false, why: "Still exposes at least one machine to the internet, which you're trying to avoid." },
+      { text: "Assign public IPs to all VMs and restrict with NSGs", correct: false, why: "Increases attack surface and management overhead with no real benefit." },
+      { text: "Use Azure VPN Gateway to connect directly to VM private IPs", correct: false, why: "Provides network access but still requires managing remote-desktop tools or SSH clients." },
+      { text: "Use Azure Bastion to provide RDP/SSH access through the Azure portal", correct: true, why: "Tunnels access through the portal via TLS, with no public IP or open RDP/SSH ports needed." },
+    ],
+    "Azure Bastion is the streamlined, secure option that removes the need for public IPs or exposed remote-access ports."
+  ),
+  mcq("security",
+    "Which two benefits does Azure Bastion provide?",
+    [
+      { text: "RDP/SSH connections are initiated from the Azure portal using HTML5 clients", correct: true, why: "Browser-based access removes the need for a separate RDP/SSH client." },
+      { text: "It requires each virtual machine to have a public IP", correct: false, why: "Bastion enables private connectivity — VMs don't need public IPs." },
+      { text: "It eliminates the need for NSG rules on the Bastion subnet", correct: true, why: "Bastion is fully managed with a hardened posture, removing that configuration burden." },
+      { text: "It allows multiple subscriptions to share the same Bastion instance", correct: false, why: "Bastion is scoped to a single virtual network, not shared across subscriptions." },
+    ],
+    "Bastion boosts both convenience (browser-based access) and simplicity (no custom NSG rules needed).",
+    2
+  ),
+  mcq("security",
+    "Multiple teams each need their own secrets and keys, with access scoped only to their own data. How should you structure Key Vault deployment?",
+    [
+      { text: "Deploy a single Key Vault for all applications with shared access", correct: false, why: "Increases risk — teams could inadvertently access secrets they shouldn't." },
+      { text: "Create separate Key Vaults per application/team with scoped permissions", correct: true, why: "Isolating vaults with scoped access ensures each team accesses only what it needs." },
+      { text: "Store all secrets in Blob Storage with private endpoints per team", correct: false, why: "Blob Storage isn't built for secret management, even with private endpoints." },
+      { text: "Use Microsoft Defender to automatically distribute secrets", correct: false, why: "Defender is for threat protection, not secret distribution." },
+    ],
+    "Separate, scoped Key Vaults give the strongest isolation and the clearest access boundaries between teams."
+  ),
+  mcq("security",
+    "You're investigating an incident and need to correlate alerts, explore affected assets, and run custom visualizations with live data queries. Which two tools fit?",
+    [
+      { text: "Use the incident pane in Microsoft Sentinel", correct: true, why: "The main hub for correlation, scoping, and starting an investigation from a single view." },
+      { text: "Launch Jupyter notebooks from Azure Machine Learning", correct: true, why: "Enables custom queries, ML-based analysis, and visualizations directly from Sentinel data." },
+      { text: "Open the Sentinel playbook designer", correct: false, why: "Built for automating responses, not in-depth custom analysis." },
+      { text: "Export logs to Azure Monitor metrics", correct: false, why: "Sentinel investigations rely on log queries, not metrics data." },
+    ],
+    "The incident pane scopes the threat; Jupyter notebooks add custom, code-driven exploration on top of it.",
+    2
+  ),
+  mcq("security",
+    "You're designing an Azure VNet with a sensitive backend VM (VM1) and a public web server VM (VM2). How should you configure NSGs?",
+    [
+      { text: "Assign an NSG to both subnets allowing all inbound/outbound traffic", correct: false, why: "Allowing everything defeats the purpose of using NSGs at all." },
+      { text: "Assign a single NSG with identical rules to both subnets", correct: false, why: "Won't meet the differing access needs of a sensitive backend vs. a public web server." },
+      { text: "Assign an NSG only to VM1's subnet for strict control, leaving VM2 public-facing", correct: true, why: "VM1 needs tight control for sensitive data; VM2, as a minimal-exposure public web server, may not need a custom NSG." },
+      { text: "Assign no NSGs, relying on Azure's automatic traffic management", correct: false, why: "Relying only on defaults isn't a secure practice for sensitive workloads." },
+    ],
+    "Apply the strictest control where sensitivity is highest (VM1), rather than uniform rules across both subnets."
+  ),
+  mcq("security",
+    "Which tool is used to define automated workflows in Sentinel that block IPs, notify admins, and update tickets automatically?",
+    [
+      { text: "Azure Logic Apps", correct: true, why: "Sentinel playbooks are built on Logic Apps, defining the actual automated workflow steps." },
+      { text: "Azure Monitor Alerts", correct: false, why: "Can trigger a response, but doesn't define the workflow itself." },
+      { text: "Azure DevOps Pipelines", correct: false, why: "Used for software deployment/CI-CD, not incident response." },
+      { text: "Microsoft Purview", correct: false, why: "Handles compliance and governance, with no role in security automation." },
+    ],
+    "Logic Apps is the underlying engine that powers Sentinel playbooks and their automated response workflows."
+  ),
+  mcq("security",
+    "You're investigating a possible ransomware attack and want alerts, affected assets, and automated investigation steps in one view. What should you use?",
+    [
+      { text: "Threat intelligence", correct: false, why: "Gives external context like IOCs, but doesn't consolidate real-time alerts or investigation steps." },
+      { text: "Incident summary in the Microsoft Defender portal", correct: true, why: "Aggregates alerts, affected users/devices, and automated response actions into one unified dashboard." },
+      { text: "Secure score", correct: false, why: "Measures overall posture, not specific incidents." },
+      { text: "Partner catalog", correct: false, why: "Lists integrations, not an investigation tool." },
+    ],
+    "The incident summary is the single-pane view purpose-built for tracing an active incident end-to-end."
+  ),
+  tf("security",
+    "Azure Firewall and DDoS — true or false?",
+    [
+      { text: "Azure Firewall supports both network and application layer filtering.", answer: true, why: "It filters at layers 3–7, based on IPs, ports, and FQDNs." },
+      { text: "You must manually update Azure Firewall threat intelligence feeds.", answer: false, why: "Microsoft updates threat intelligence automatically." },
+      { text: "Azure Firewall provides built-in high availability and can span availability zones.", answer: true, why: "HA and zone redundancy are built into the service." },
+      { text: "Logs from Azure Firewall can only be viewed in the Azure portal.", answer: false, why: "Logs can also be routed to Azure Monitor, Event Hubs, or Log Analytics." },
+    ],
+    "Azure Firewall is automatically updated, highly available, and flexible in where its logs can be viewed."
+  ),
+  tf("security",
+    "Defender for Cloud multicloud and plans — true or false?",
+    [
+      { text: "Microsoft Defender for Cloud supports multicloud security across AWS and GCP.", answer: true, why: "It provides unified protection from a single pane of glass across clouds." },
+      { text: "You must select one Defender plan at a time per subscription.", answer: false, why: "Multiple Defender plans can run simultaneously on the same subscription." },
+      { text: "Microsoft Defender for DNS protects name-resolution traffic in Azure.", answer: true, why: "It adds threat detection to Azure DNS resolution." },
+      { text: "All enhanced security features are available in the foundational CSPM tier.", answer: false, why: "Advanced capabilities like just-in-time access require paid Defender plans." },
+    ],
+    "Defender for Cloud is multicloud by design, supports multiple simultaneous plans, and reserves advanced features for paid tiers."
+  ),
+  mcq("security",
+    "Which two characteristics describe Microsoft Security Copilot agents?",
+    [
+      { text: "They operate independently from Microsoft tools with no integration required", correct: false, why: "Agents are fully integrated into the Microsoft security ecosystem, not standalone." },
+      { text: "They can manage repetitive tasks across security and IT workflows", correct: true, why: "Agents handle high-volume, routine tasks like triage or consistent remediation steps." },
+      { text: "They generate prompt books to help users learn effective input methods", correct: false, why: "Prompt books exist, but teaching input methods isn't the agents' primary design goal." },
+      { text: "They adapt to organizational workflows and use Microsoft's Zero Trust model", correct: true, why: "Agents operate under Zero Trust principles, verifying identity/context before acting." },
+    ],
+    "Copilot agents are integrated, Zero-Trust-aligned automation for repetitive security/IT tasks — not standalone tools.",
+    2
+  ),
+  mcq("security",
+    "A security analyst needs to summarize an incident, analyze a suspicious script, and define policies quickly without writing custom queries. Which two statements about using Security Copilot are correct?",
+    [
+      { text: "Copilot can summarize security incidents and provide remediation guidance", correct: true, why: "One of its core functions — quickly explains what happened and recommends next steps." },
+      { text: "Copilot replaces all manual security processes with AI-based automation", correct: false, why: "Copilot augments analysts; human judgment and action are still required." },
+      { text: "Copilot allows natural language input to generate KQL queries and analyze scripts", correct: true, why: "Analysts can describe what they want in plain English instead of writing KQL by hand." },
+      { text: "Copilot automatically prevents attacks without user involvement", correct: false, why: "Copilot provides insight, not autonomous enforcement — analysts must still act." },
+    ],
+    "Copilot accelerates summarization and natural-language querying, but doesn't replace analyst judgment or act autonomously.",
+    2
+  ),
+  mcq("security",
+    "Which three features are found in the Microsoft Sentinel content hub?",
+    [
+      { text: "Custom roles", correct: false, why: "An Azure RBAC concept for permissions, not detection content." },
+      { text: "Key Vault secrets", correct: false, why: "A separate Azure service for secret storage." },
+      { text: "Analytics rules", correct: true, why: "Pre-built or custom rules for detecting threats from ingested data." },
+      { text: "Hunting queries", correct: true, why: "Structured KQL queries for proactive threat hunting." },
+      { text: "Playbooks", correct: true, why: "Automation workflows built on Logic Apps." },
+    ],
+    "The content hub is about detection logic, investigative tools, and automation — not access control or secret storage.",
+    3
+  ),
+  mcq("security",
+    "Your SOC team is investigating a compromised identity and unauthorized lateral movement, using Active Directory signals. Which tool fits?",
+    [
+      { text: "Defender for Office 365", correct: false, why: "Protects collaboration tools like Outlook/Teams, without processing AD signals." },
+      { text: "Microsoft Defender for Identity", correct: true, why: "Built to analyze AD signals for credential theft, lateral movement, and insider threats." },
+      { text: "Microsoft Defender for Cloud Apps", correct: false, why: "Primarily a cloud access security broker, not focused on AD identity signals." },
+      { text: "Microsoft Defender for Endpoint", correct: false, why: "Monitors devices, not identity behavior tied to AD." },
+    ],
+    "Whenever a scenario centers on AD signals and identity-based attacks, Defender for Identity is the right tool."
+  ),
+  mcq("security",
+    "Which two features are supported by the Copilot embedded experience in Microsoft Defender XDR?",
+    [
+      { text: "Summarizing incidents", correct: true, why: "Gives analysts a quick overview of what happened, without manually digging through logs." },
+      { text: "Automatic patch deployment", correct: false, why: "That's handled by Intune/Configuration Manager, not Copilot." },
+      { text: "Role assignment management", correct: false, why: "Managed via Entra ID/Azure RBAC, not Defender XDR's Copilot." },
+      { text: "Script analysis", correct: true, why: "Copilot can review and explain what a suspicious script (e.g., PowerShell) is doing." },
+    ],
+    "Copilot in Defender XDR focuses on summarization and script analysis, not deployment or role administration.",
+    2
+  ),
+  mcq("security",
+    "Which two are characteristics of Azure DDoS Protection Standard (Network Protection)?",
+    [
+      { text: "It offers built-in high availability for web applications", correct: false, why: "HA for web apps is a firewall/app-service concern, not DDoS Protection's job." },
+      { text: "It includes logging, alerting, and telemetry capabilities", correct: true, why: "Gives advanced visibility into attack activity — a key advantage over the basic tier." },
+      { text: "It provides protection by default with no extra configuration", correct: false, why: "The always-on basic tier is default; Standard/Network Protection requires enabling on a VNet." },
+      { text: "It supports automatic scaling of virtual appliances", correct: false, why: "That's a firewall-related feature, not DDoS defense." },
+      { text: "It uses multiple compromised systems to mitigate attacks", correct: false, why: "That describes how DDoS attacks happen, not how Azure defends against them." },
+    ],
+    "Network Protection's headline value is deep telemetry/logging on top of always-on volumetric protection.",
+    2
+  ),
+  mcq("security",
+    "Which two benefits do Application Security Groups (ASGs) provide in Azure?",
+    [
+      { text: "They simplify NSG rule management using logical application roles", correct: true, why: "Lets you group VMs by role (e.g., 'web server') instead of by individual IP address." },
+      { text: "They apply security rules based on IP address ranges", correct: false, why: "That's standard NSG behavior, not an ASG-specific benefit." },
+      { text: "They reduce the number of required NSG entries for multi-tier apps", correct: true, why: "Rules applied once to a group replace many per-VM rules, reducing clutter." },
+      { text: "They act as Layer 7 proxies for inspecting traffic", correct: false, why: "ASGs don't inspect traffic — they only group VMs for rule application." },
+      { text: "They require Azure Firewall to function", correct: false, why: "ASGs work independently, with no dependency on Azure Firewall." },
+    ],
+    "ASGs are all about logical grouping to simplify and reduce NSG rule sprawl, not traffic inspection.",
+    2
+  ),
+  mcq("security",
+    "Which three Azure services receive workload-specific protection from Microsoft Defender for Cloud?",
+    [
+      { text: "Azure SQL", correct: true, why: "Defender for SQL monitors for threats and vulnerabilities continuously." },
+      { text: "Azure Key Vault", correct: true, why: "Defender for Key Vault watches access patterns for potential misuse of secrets." },
+      { text: "Azure Bastion", correct: false, why: "Provides secure remote access; it isn't itself a Defender for Cloud protected workload." },
+      { text: "Azure DNS", correct: true, why: "Defender for DNS (or Defender for Servers P2) provides threat protection for name-resolution traffic." },
+    ],
+    "Confirmed against Microsoft Learn: SQL, Key Vault, and DNS all have dedicated Defender for Cloud protections; Bastion and Application Gateway don't.",
+    3
+  ),
+
+  // ===================== COMPLIANCE =====================
+  mcq("compliance",
+    "A security analyst wants to collect Exchange audit logs via PowerShell, without using a GUI. Which method fits?",
+    [
+      { text: "Security Copilot", correct: false, why: "Great for AI-assisted investigation, but not designed for manual PowerShell log retrieval." },
+      { text: "Office 365 Management Activity API", correct: false, why: "A valid way to collect logs, but used programmatically via scripts/apps, not an interactive PowerShell session." },
+      { text: "The audit log search tool in Purview", correct: false, why: "GUI-based, which doesn't meet the 'no GUI' requirement." },
+      { text: "Search-UnifiedAuditLog cmdlet", correct: true, why: "Lets analysts query the unified audit log directly in PowerShell, filter by date/user/activity, and export results." },
+    ],
+    "Search-UnifiedAuditLog is the direct, scriptable way to pull audit logs from PowerShell without touching a GUI."
+  ),
+  mcq("compliance",
+    "Which two responsibilities are primarily handled by a data steward in Microsoft Purview?",
+    [
+      { text: "Registering data assets", correct: false, why: "Typically a data owner's responsibility." },
+      { text: "Maintaining glossary consistency", correct: true, why: "Stewards align terminology across the organization so everyone means the same thing by the same term." },
+      { text: "Ensuring data discovery", correct: true, why: "Stewards help make data easy to find so analysts aren't hunting for the right dataset." },
+      { text: "Creating data products", correct: false, why: "Falls under data product owners." },
+      { text: "Granting user access", correct: false, why: "Managed through access policies, typically by owners or policy managers." },
+    ],
+    "The data steward's core job is a clear, consistent data language and discoverability — not asset registration or access grants.",
+    2
+  ),
+  tf("compliance",
+    "Microsoft privacy and audit principles — true or false?",
+    [
+      { text: "Microsoft's privacy principles include avoiding content-based targeting of users.", answer: true, why: "User data isn't scanned for advertising purposes." },
+      { text: "Customers are allowed to conduct their own penetration testing in Microsoft 365 environments.", answer: false, why: "Microsoft restricts this and instead provides validated results via the Service Trust Portal." },
+      { text: "Sensitivity labels can be applied to Teams chats and meetings.", answer: true, why: "Labeling extends beyond documents/emails to Teams conversations." },
+      { text: "Bridge letters are used to replace out-of-date audit reports with new ones.", answer: false, why: "Bridge letters are interim assurances that nothing material changed — they don't replace the report itself." },
+    ],
+    "Privacy-by-design, restricted customer pentesting, broad sensitivity labeling, and bridge letters as interim (not replacement) documents are all real Microsoft practices."
+  ),
+  tf("compliance",
+    "Retention, labeling, and compliance categories — true or false?",
+    [
+      { text: "Retention policies can be applied to specific locations, entire sites, or individual users.", answer: true, why: "Retention is flexible in scope, targeting exactly what's needed." },
+      { text: "A lower-priority sensitivity label can override a higher-priority label during autolabeling.", answer: false, why: "Priority rules prevent lower-priority labels from downgrading protection." },
+      { text: "Microsoft Compliance Manager groups improvement actions into technical and operational categories.", answer: true, why: "This separation makes it easier to track and manage compliance tasks." },
+      { text: "Old data that is no longer needed should be retained for reference to improve transparency.", answer: false, why: "Unnecessary retention is a security and legal risk — it should be minimized, not encouraged." },
+    ],
+    "Retention should be scoped and minimized, while labeling priority rules protect against accidental downgrades."
+  ),
+  match("compliance",
+    "Match each data governance role or concept to its correct description.",
+    [
+      { left: "Data owner", right: "Manages data access, classifications, and ensures high quality" },
+      { left: "Data curation", right: "Organizes, annotates, and publishes data to make it reusable and protected" },
+      { left: "Data consumer", right: "Discovers and requests access to relevant, trusted datasets" },
+      { left: "Central data office", right: "Oversees governance policy creation, compliance, and program health" },
+      { left: "Data steward", right: "Maintains consistency in glossary, discovery, and lineage" },
+    ],
+    "Each role covers a distinct part of the data governance lifecycle, from ownership and curation to consumption and strategic oversight."
+  ),
+  mcq("compliance",
+    "Your organization is concerned about insider threats and wants HR and legal to collaborate on investigations of risky behavior. Which solution fits?",
+    [
+      { text: "Microsoft Entra permissions management", correct: false, why: "Focused on cloud permissions, not behavioral monitoring." },
+      { text: "Insider risk management", correct: true, why: "Designed to detect, investigate, and act on risky behavior, with built-in collaboration between HR, legal, and compliance." },
+      { text: "Microsoft information barriers", correct: false, why: "Prevents communication between groups, but doesn't monitor for insider threat behavior." },
+      { text: "Microsoft Defender Threat Intelligence", correct: false, why: "Focused on external threats, not internal user behavior." },
+    ],
+    "Insider risk management uniquely combines behavioral monitoring with cross-departmental collaboration for internal threats."
+  ),
+  mcq("compliance",
+    "Which three types of documents appear in the Service Trust Portal's 'Reports, White Papers, and Artifacts' section?",
+    [
+      { text: "Penetration testing attestations", correct: true, why: "Third-party assessment evidence showing how services stand up to simulated attacks." },
+      { text: "Web tracker compliance reports", correct: false, why: "Tied to separate private-tracker scanning, not this Service Trust Portal section." },
+      { text: "Privacy and data protection resources", correct: true, why: "White papers and guidance on how Microsoft safeguards personal data." },
+      { text: "Business continuity and disaster recovery (BCDR) documents", correct: true, why: "Details plans and capabilities for maintaining operations during disruptions." },
+    ],
+    "This section is about security verification, privacy transparency, and resilience planning — not web-tracker reports.",
+    3
+  ),
+  match("compliance",
+    "Match each Service Trust Portal section to its content.",
+    [
+      { left: "Reports, white papers, and artifacts", right: "Documents like privacy resources and penetration testing reports" },
+      { left: "Industry and regional resources", right: "Country-specific financial and healthcare compliance guidance" },
+      { left: "Resources for your organization", right: "Compliance resources specific to your subscription and tenant" },
+      { left: "My library", right: "Lets you bookmark and receive update notifications for important documents" },
+    ],
+    "Each section serves a different navigation purpose: deep-dive proof, sector guidance, tenant-specific content, or personal bookmarking."
+  ),
+  mcq("compliance",
+    "Which three capabilities are exclusive to Microsoft Purview eDiscovery (Premium)?",
+    [
+      { text: "OCR to extract text from images", correct: true, why: "Makes text inside scanned or screenshotted documents searchable — a Premium-only capability." },
+      { text: "Export search results to a local computer", correct: false, why: "Available in both Standard and Premium editions." },
+      { text: "Conversation threading in Teams", correct: true, why: "Lets investigators view chats in full conversational context, exclusive to Premium." },
+      { text: "Place content locations on hold", correct: false, why: "Also a shared capability across editions." },
+      { text: "Summarization of evidence via Security Copilot", correct: true, why: "AI-driven condensation of evidence is a Premium-only feature." },
+    ],
+    "The Premium edge lies in advanced AI and context-driven investigation tools, not the baseline search/export/hold capabilities.",
+    3
+  ),
+  tf("compliance",
+    "Microsoft Purview data quality and discovery — true or false?",
+    [
+      { text: "Microsoft Purview data quality can generate rules using AI and low-code tools.", answer: true, why: "AI/low-code rule generation removes the need for heavy manual scripting." },
+      { text: "Health actions help improve governance posture by addressing checklist items tied to health scores.", answer: true, why: "Health actions guide admins through corrective steps tied to flagged issues." },
+      { text: "Search is the only method for data discovery in Microsoft Purview.", answer: false, why: "You can also browse data assets hierarchically, by category or source." },
+      { text: "Data health controls provide real-time remediation of data quality issues.", answer: false, why: "They monitor and highlight issues but don't perform instant fixes — remediation is a separate, planned action." },
+    ],
+    "Purview offers AI-assisted automation and guided governance, but its monitoring tools flag issues rather than auto-fix them."
+  ),
+  tf("compliance",
+    "Sensitivity labels, DLP, and classifiers — true or false?",
+    [
+      { text: "Content explorer shows what content has been labeled or classified.", answer: true, why: "It gives a real-time view of labeled/classified items across Microsoft 365." },
+      { text: "Information barriers allow users to selectively bypass communication restrictions.", answer: false, why: "They enforce, not bypass, strict communication controls between groups." },
+      { text: "DLP policy tips can warn users before they share sensitive data externally.", answer: true, why: "Policy tips proactively alert users in real time." },
+      { text: "Trainable classifiers can be used to classify structured database fields only.", answer: false, why: "They're designed for unstructured data (emails, documents), not structured database fields." },
+    ],
+    "Content explorer shows placement, DLP tips warn proactively, and information barriers restrict (never bypass) communication."
+  ),
+  mcq("compliance",
+    "Which two platforms are supported for autolabeling policies in Microsoft Purview?",
+    [
+      { text: "Azure Synapse", correct: false, why: "Tied to Purview governance/analytics, not autolabeling policies." },
+      { text: "Exchange", correct: true, why: "Autolabeling can scan and label email content automatically." },
+      { text: "Microsoft Teams", correct: false, why: "Teams content can be labeled, but isn't a primary autolabeling target platform." },
+      { text: "SharePoint", correct: false, why: "Supports some autolabeling, but isn't the primary/most prominent platform for it." },
+      { text: "OneDrive", correct: true, why: "Autolabeling can scan OneDrive documents for sensitive content and apply labels automatically." },
+    ],
+    "Exchange and OneDrive are the primary platforms explicitly supported for autolabeling policies.",
+    2
+  ),
+  match("compliance",
+    "Match each sensitivity labeling/policy concept to its description.",
+    [
+      { left: "Sensitivity labels", right: "Persistently classify and protect content with embedded metadata" },
+      { left: "Label policies", right: "Publish labels to specific users or groups so they can apply them" },
+      { left: "Mandatory labeling", right: "Requires users to select a label before sending or saving content" },
+      { left: "Justification requirement", right: "Prompts users to explain why a label is removed or changed" },
+      { left: "Content marking", right: "Adds headers, footers, or watermarks when labels are applied" },
+    ],
+    "Together, these elements create an enforceable labeling strategy — from persistent classification to visible markers and accountability."
+  ),
+  match("compliance",
+    "Match each communication compliance concept to its description.",
+    [
+      { left: "Policy configuration", right: "Lets admins define rules that flag risky or non-compliant communications" },
+      { left: "Message review", right: "Lets designated reviewers evaluate flagged messages and take action" },
+      { left: "Monitoring", right: "Logs activity and visualizes trends via dashboards and audit logs" },
+      { left: "Microsoft Security Copilot", right: "Summarizes flagged messages and attachments using generative AI" },
+    ],
+    "Policy defines what to catch, message review handles the human decision, monitoring tracks trends, and Copilot adds AI summarization on top."
+  ),
+  mcq("compliance",
+    "You're setting up a new Microsoft 365 tenant that will use audit logging. What's the best action to take?",
+    [
+      { text: "Do nothing — audit standard is always enabled", correct: false, why: "Assuming this without checking risks missing valuable audit data if it wasn't actually activated." },
+      { text: "Verify that auditing is turned on in the new tenant", correct: true, why: "Confirming activation ensures user/admin activity is logged from day one, critical for investigations and compliance." },
+      { text: "Use PowerShell to reset audit log retention policies", correct: false, why: "That only affects how long logs are kept, not whether auditing is active." },
+      { text: "Install Security Copilot to activate auditing features", correct: false, why: "Copilot enhances analysis; it doesn't enable core auditing." },
+    ],
+    "The safest step in a new tenant is always to manually verify auditing is on, rather than assuming the default holds."
+  ),
+  mcq("compliance",
+    "A compliance team needs to know if an employee forwarded sensitive mail, when it was accessed/replied to, and wants records retained for one year. What fits?",
+    [
+      { text: "Audit (Standard)", correct: false, why: "Provides only basic activity logs, and lacks depth for tracking individual email interactions or year-long retention by default." },
+      { text: "Microsoft Defender", correct: false, why: "Excellent for malware/threats, but doesn't offer detailed audit trails for message behavior." },
+      { text: "Audit (Premium)", correct: true, why: "Gives forensic-level mail activity tracking (accessed, replied, forwarded) and supports up to a year of retention." },
+      { text: "Compliance Manager", correct: false, why: "Helps manage regulatory requirements, not the technical audit data needed here." },
+    ],
+    "Audit Premium is the tier built for granular mail-activity forensics and extended log retention."
+  ),
+  mcq("compliance",
+    "Which two components of Microsoft Purview help provide business context and enforce governance rules on data assets?",
+    [
+      { text: "Data products", correct: true, why: "Bundle related data assets into reusable packages, linking to glossary terms so governance applies consistently." },
+      { text: "OKRs", correct: false, why: "Useful for setting goals, but don't enforce rules or provide metadata." },
+      { text: "Glossary terms", correct: true, why: "Define standardized business concepts and can carry governance policies like terms of use." },
+      { text: "Health actions", correct: false, why: "Help fix data quality issues, but don't establish business meaning or governance context." },
+    ],
+    "Glossary terms and data products together give data both shared meaning and consistent, enforceable governance.",
+    2
+  ),
+  mcq("compliance",
+    "What is most closely associated with Microsoft Purview's use of AI in data quality and profiling?",
+    [
+      { text: "It allows real-time access decisions to be audited", correct: false, why: "That's a security/compliance function, not data profiling." },
+      { text: "It generates glossary definitions from raw data", correct: false, why: "Glossary definitions are typically created manually by subject matter experts." },
+      { text: "It creates automated no-code rules for data evaluation", correct: true, why: "AI detects patterns/outliers and suggests or enforces quality rules without requiring scripting." },
+      { text: "It maps glossary terms to regulatory compliance documents", correct: false, why: "That's a compliance-mapping function, not where Purview's AI is applied here." },
+    ],
+    "The real value of Purview's AI here is no-code rule automation for evaluating data quality at scale."
+  ),
+  mcq("compliance",
+    "Which two capabilities does the content explorer in Microsoft Purview provide?",
+    [
+      { text: "Monitor file-level label downgrades over time", correct: false, why: "That's an Activity Explorer capability, focused on behavioral trends over time." },
+      { text: "Access and drill into scanned content by sensitivity label", correct: true, why: "Lets admins explore how labels are used and where sensitive data actually lives." },
+      { text: "View user-level activities on sensitive content", correct: false, why: "Also an Activity Explorer function — it tracks who acted on the data, not where it's stored." },
+      { text: "Review items stored in Exchange, SharePoint, and OneDrive", correct: true, why: "Content Explorer surfaces labeled data across these locations." },
+    ],
+    "Content Explorer shows where labeled data lives; Activity Explorer shows how people interact with it — a common point of confusion.",
+    2
+  ),
+  mcq("compliance",
+    "A compliance officer wants Entra ID and SharePoint activity logs retained for up to a year, with fast access and integration into external analytics tools. What fits?",
+    [
+      { text: "Audit (Standard)", correct: false, why: "Only retains logs for up to 180 days by default and doesn't support the same higher-bandwidth API access." },
+      { text: "Audit (Premium)", correct: true, why: "Retains records up to a year and supports higher-bandwidth Management Activity API access, ideal for external analytics integration." },
+      { text: "Compliance Manager", correct: false, why: "Manages compliance requirements and improvement actions, not raw log retention/querying." },
+      { text: "Security Copilot", correct: false, why: "Summarizes and accelerates investigations, but doesn't handle raw log retention." },
+    ],
+    "Audit Premium is the solution built specifically for long-term retention plus high-throughput integration with external tools."
+  ),
+  match("compliance",
+    "Match each record type in Microsoft Purview records management to its behavior.",
+    [
+      { left: "Regulatory record", right: "Cannot have its label removed, even by a Global Administrator — strict, irreversible retention" },
+      { left: "Record", right: "Can be updated or deleted by admins when needed — more flexible for general data lifecycle policies" },
+    ],
+    "Regulatory records lock down content for legal/regulatory compliance; regular records give admins room to manage data more freely."
+  ),
+  tf("compliance",
+    "Audit, eDiscovery, and communication compliance — true or false?",
+    [
+      { text: "Audit (Standard) supports exporting logs to CSV for use in Excel.", answer: true, why: "A built-in feature that supports easy log analysis." },
+      { text: "Review sets in eDiscovery use Azure storage locations provided by Microsoft.", answer: true, why: "Ensures investigation data remains secure and isolated." },
+      { text: "Retained items are deleted from user view immediately when retention is applied.", answer: false, why: "Retained content stays visible in its original location unless separately deleted or otherwise restricted." },
+      { text: "Security Copilot supports summarizing messages under 50 words in communication compliance.", answer: false, why: "Copilot requires roughly 100 words or more to generate a meaningful summary." },
+    ],
+    "Retention doesn't hide content from users, and Copilot's summarization has a minimum content-length threshold."
+  ),
+  tf("compliance",
+    "Purview governance domains — true or false?",
+    [
+      { text: "Governance domains in Microsoft Purview can represent organizational functions like customer experience or cloud supply chain.", answer: true, why: "Domains can be modeled around business functions, not just technical categories." },
+      { text: "A data product can belong to multiple governance domains at once.", answer: false, why: "A data product can be discovered across domains, but is owned/managed by only one." },
+      { text: "Glossary terms can carry data governance policies such as terms of use and business health goals.", answer: true, why: "Glossary terms can embed governance policies directly." },
+      { text: "OKRs are used to enforce access control policies on data products.", answer: false, why: "OKRs measure strategic goals — they don't enforce security or access controls." },
+    ],
+    "Governance domains map to business functions with single ownership, while glossary terms (not OKRs) carry enforceable policy."
+  ),
+  mcq("compliance",
+    "What's a key difference between data lifecycle management and records management in Microsoft Purview?",
+    [
+      { text: "Records management only applies to emails", correct: false, why: "It applies across many content types, including SharePoint and OneDrive files." },
+      { text: "Lifecycle management is focused on permanent retention", correct: false, why: "The opposite is true — lifecycle management focuses on cleaning up unnecessary data to reduce risk." },
+      { text: "Records management supports disposition reviews for legal documents", correct: true, why: "Before deletion, a designated reviewer must manually approve it for high-value or legally significant content." },
+      { text: "Lifecycle management is not concerned with risk reduction", correct: false, why: "It's actually central to lifecycle management — reducing clutter and exposure." },
+    ],
+    "The defining difference: records management adds a human disposition-review checkpoint before deletion; lifecycle management focuses on automated cleanup."
+  ),
+];
+
+
+// ---------- helpers ----------
+const shuffle = (arr) => {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+};
+
+const STORAGE_KEY = "sc900:progress:v1";
+
+const defaultProgress = () => ({
+  domainStats: Object.keys(DOMAINS).reduce((acc, d) => {
+    acc[d] = { seen: 0, correct: 0 };
+    return acc;
+  }, {}),
+  mockHistory: [],
+});
+
+// ---------- grading per question type ----------
+function isCorrect(q, response) {
+  if (!response) return false;
+  if (q.type === "mcq") {
+    const correctIds = q.options.map((o, i) => (o.correct ? i : null)).filter((i) => i !== null);
+    const sel = response.selected || [];
+    if (sel.length !== correctIds.length) return false;
+    return correctIds.every((i) => sel.includes(i));
+  }
+  if (q.type === "tf") {
+    const ans = response.answers || {};
+    return q.statements.every((s, i) => ans[i] === s.answer);
+  }
+  if (q.type === "match") {
+    const picks = response.picks || {};
+    return q.pairs.every((p, i) => picks[i] === p.right);
+  }
+  if (q.type === "order") {
+    const seq = response.sequence || [];
+    return q.items.every((item, i) => seq[i] === item);
+  }
+  return false;
+}
+
+// ================= App =================
+function App() {
+  const [screen, setScreen] = useState("menu"); // menu | quiz | results
+  const [mode, setMode] = useState("practice"); // practice | mock
+  const [activeDomains, setActiveDomains] = useState(new Set(Object.keys(DOMAINS)));
+  const [queue, setQueue] = useState([]);
+  const [idx, setIdx] = useState(0);
+  const [responses, setResponses] = useState({}); // qid -> response
+  const [checked, setChecked] = useState({}); // qid -> bool (has been checked)
+  const [progress, setProgress] = useState(defaultProgress());
+  const [loadedStorage, setLoadedStorage] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await window.storage?.get(STORAGE_KEY, false);
+        if (res?.value) {
+          const parsed = JSON.parse(res.value);
+          setProgress({ ...defaultProgress(), ...parsed });
+        }
+      } catch (e) {
+        // no saved progress yet
+      } finally {
+        setLoadedStorage(true);
+      }
+    })();
+  }, []);
+
+  const saveProgress = useCallback(async (next) => {
+    setProgress(next);
+    try {
+      await window.storage?.set(STORAGE_KEY, JSON.stringify(next), false);
+    } catch (e) {
+      // ignore storage failures — session still works in memory
+    }
+  }, []);
+
+  const filteredPool = useMemo(
+    () => QUESTIONS.filter((q) => activeDomains.has(q.domain)),
+    [activeDomains]
+  );
+
+  const toggleDomain = (d) => {
+    setActiveDomains((prev) => {
+      const next = new Set(prev);
+      if (next.has(d)) {
+        if (next.size > 1) next.delete(d);
+      } else next.add(d);
+      return next;
+    });
+  };
+
+  const startRun = (m) => {
+    setMode(m);
+    const pool = shuffle(filteredPool);
+    const size = m === "mock" ? Math.min(40, pool.length) : pool.length;
+    setQueue(pool.slice(0, size).map((q) => q.id));
+    setIdx(0);
+    setResponses({});
+    setChecked({});
+    setScreen("quiz");
+  };
+
+  const currentQ = useMemo(
+    () => QUESTIONS.find((q) => q.id === queue[idx]),
+    [queue, idx]
+  );
+
+  const setResponse = (qid, resp) => {
+    setResponses((prev) => ({ ...prev, [qid]: resp }));
+  };
+
+  const handleCheck = () => {
+    if (!currentQ) return;
+    const resp = responses[currentQ.id];
+    const correct = isCorrect(currentQ, resp);
+    setChecked((prev) => ({ ...prev, [currentQ.id]: true }));
+    const next = {
+      ...progress,
+      domainStats: {
+        ...progress.domainStats,
+        [currentQ.domain]: {
+          seen: (progress.domainStats[currentQ.domain]?.seen || 0) + 1,
+          correct: (progress.domainStats[currentQ.domain]?.correct || 0) + (correct ? 1 : 0),
+        },
+      },
+    };
+    saveProgress(next);
+  };
+
+  const handleNext = () => {
+    if (idx + 1 < queue.length) {
+      setIdx(idx + 1);
+    } else if (mode === "mock") {
+      finishMock();
+    } else {
+      setScreen("menu");
+    }
+  };
+
+  const finishMock = () => {
+    const total = queue.length;
+    const domainStats = { ...progress.domainStats };
+    let correctCount = 0;
+    queue.forEach((qid) => {
+      const q = QUESTIONS.find((qq) => qq.id === qid);
+      const ok = isCorrect(q, responses[qid]);
+      if (ok) correctCount++;
+      domainStats[q.domain] = {
+        seen: (domainStats[q.domain]?.seen || 0) + 1,
+        correct: (domainStats[q.domain]?.correct || 0) + (ok ? 1 : 0),
+      };
+    });
+    const record = { date: new Date().toISOString(), score: correctCount, total };
+    const next = { ...progress, domainStats, mockHistory: [record, ...progress.mockHistory].slice(0, 20) };
+    saveProgress(next);
+    setScreen("results");
+  };
+
+  const overallStats = useMemo(() => {
+    let seen = 0, correct = 0;
+    Object.values(progress.domainStats).forEach((s) => { seen += s.seen; correct += s.correct; });
+    return { seen, correct, pct: seen ? Math.round((correct / seen) * 100) : 0 };
+  }, [progress]);
+
+  return (
+    <div style={styles.appShell}>
+      <style>{globalCss}</style>
+      <TopBar overallStats={overallStats} />
+      {screen === "menu" && (
+        <MenuScreen
+          activeDomains={activeDomains}
+          toggleDomain={toggleDomain}
+          filteredCount={filteredPool.length}
+          progress={progress}
+          onStart={startRun}
+        />
+      )}
+      {screen === "quiz" && currentQ && (
+        <QuizScreen
+          q={currentQ}
+          index={idx}
+          total={queue.length}
+          mode={mode}
+          response={responses[currentQ.id]}
+          setResponse={(r) => setResponse(currentQ.id, r)}
+          isChecked={mode === "practice" ? !!checked[currentQ.id] : false}
+          onCheck={mode === "practice" ? handleCheck : undefined}
+          onNext={handleNext}
+          showFeedback={mode === "practice"}
+          onExit={() => setScreen("menu")}
+        />
+      )}
+      {screen === "results" && (
+        <ResultsScreen
+          queue={queue}
+          responses={responses}
+          onRestart={() => setScreen("menu")}
+        />
+      )}
+    </div>
+  );
+}
+
+// ---------- Top bar ----------
+function TopBar({ overallStats }) {
+  return (
+    <div style={styles.topBar}>
+      <div style={styles.brand}>
+        <Radar size={20} color="#5EEAD4" strokeWidth={2.2} />
+        <div>
+          <div style={styles.brandTitle}>SC-900 CONSOLE</div>
+          <div style={styles.brandSub}>Security · Compliance · Identity Fundamentals</div>
+        </div>
+      </div>
+      <div style={styles.gaugeWrap}>
+        <Gauge pct={overallStats.pct} />
+        <div style={styles.gaugeText}>
+          <div style={styles.gaugePct}>{overallStats.pct}%</div>
+          <div style={styles.gaugeLabel}>{overallStats.correct}/{overallStats.seen} lifetime</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Gauge({ pct }) {
+  const r = 20, c = 2 * Math.PI * r;
+  const offset = c - (pct / 100) * c;
+  const color = pct >= 80 ? "#5EEAD4" : pct >= 50 ? "#FDE68A" : "#FCA5A5";
+  return (
+    <svg width="52" height="52" viewBox="0 0 52 52">
+      <circle cx="26" cy="26" r={r} fill="none" stroke="#1E2733" strokeWidth="5" />
+      <circle
+        cx="26" cy="26" r={r} fill="none" stroke={color} strokeWidth="5"
+        strokeDasharray={c} strokeDashoffset={offset} strokeLinecap="round"
+        transform="rotate(-90 26 26)" style={{ transition: "stroke-dashoffset 0.6s ease" }}
+      />
+    </svg>
+  );
+}
+
+// ---------- Menu ----------
+function MenuScreen({ activeDomains, toggleDomain, filteredCount, progress, onStart }) {
+  return (
+    <div style={styles.menuWrap}>
+      <div style={styles.menuHeader}>
+        <h1 style={styles.h1}>Threat surface: SC-900</h1>
+        <p style={styles.sub}>
+          Select the domains you want in scope, then run Practice (instant feedback) or a Mock Exam (40 questions, graded at the end).
+        </p>
+      </div>
+
+      <div style={styles.chipRow}>
+        {Object.entries(DOMAINS).map(([key, d]) => {
+          const active = activeDomains.has(key);
+          return (
+            <button
+              key={key}
+              onClick={() => toggleDomain(key)}
+              style={{
+                ...styles.chip,
+                borderColor: active ? d.color : "#2A3441",
+                color: active ? d.color : "#6B7684",
+                background: active ? `${d.color}14` : "transparent",
+              }}
+            >
+              <span style={{ ...styles.chipDot, background: active ? d.color : "#3A4451" }} />
+              {d.label}
+            </button>
+          );
+        })}
+      </div>
+
+      <div style={styles.domainStatsGrid}>
+        {Object.entries(DOMAINS).map(([key, d]) => {
+          const s = progress.domainStats[key] || { seen: 0, correct: 0 };
+          const pct = s.seen ? Math.round((s.correct / s.seen) * 100) : null;
+          return (
+            <div key={key} style={{ ...styles.domainCard, borderTop: `3px solid ${d.color}` }}>
+              <div style={styles.domainCardLabel}>{d.label}</div>
+              <div style={styles.domainCardPct} >{pct === null ? "—" : `${pct}%`}</div>
+              <div style={styles.domainCardSub}>{s.correct}/{s.seen} answered correctly</div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={styles.actionsRow}>
+        <button style={{ ...styles.bigBtn, ...styles.bigBtnPrimary }} onClick={() => onStart("practice")}>
+          <Play size={18} /> Practice mode ({filteredCount} questions)
+        </button>
+        <button style={{ ...styles.bigBtn, ...styles.bigBtnAlt }} onClick={() => onStart("mock")}>
+          <Target size={18} /> Mock exam ({Math.min(40, filteredCount)} questions)
+        </button>
+      </div>
+
+      {progress.mockHistory.length > 0 && (
+        <div style={styles.historyBox}>
+          <div style={styles.historyTitle}><ListChecks size={14} /> Recent mock exams</div>
+          {progress.mockHistory.slice(0, 5).map((h, i) => (
+            <div key={i} style={styles.historyRow}>
+              <span>{new Date(h.date).toLocaleDateString()}</span>
+              <span style={{ color: h.score / h.total >= 0.7 ? "#5EEAD4" : "#FCA5A5" }}>
+                {h.score}/{h.total} ({Math.round((h.score / h.total) * 100)}%)
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ---------- Quiz screen ----------
+function QuizScreen({ q, index, total, mode, response, setResponse, isChecked, onCheck, onNext, showFeedback, onExit }) {
+  const d = DOMAINS[q.domain];
+  const correct = isChecked ? isCorrect(q, response) : null;
+
+  return (
+    <div style={styles.quizWrap}>
+      <div style={styles.quizTopRow}>
+        <button style={styles.exitBtn} onClick={onExit}><ChevronLeft size={16} /> Menu</button>
+        <div style={styles.progressBarOuter}>
+          <div style={{ ...styles.progressBarInner, width: `${((index) / total) * 100}%` }} />
+        </div>
+        <div style={styles.qCounter}>{index + 1} / {total}</div>
+      </div>
+
+      <div style={{ ...styles.domainTag, color: d.color, borderColor: d.color }}>
+        {d.label}
+      </div>
+
+      <div style={styles.card}>
+        <div style={styles.prompt}>{q.prompt}</div>
+        {q.type === "mcq" && q.selectN > 1 && (
+          <div style={styles.hint}>Select {q.selectN} answers</div>
+        )}
+
+        {q.type === "mcq" && (
+          <McqBlock key={q.id} q={q} response={response} setResponse={setResponse} checked={isChecked && showFeedback} revealAll={isChecked} />
+        )}
+        {q.type === "tf" && (
+          <TfBlock key={q.id} q={q} response={response} setResponse={setResponse} checked={isChecked && showFeedback} revealAll={isChecked} />
+        )}
+        {q.type === "match" && (
+          <MatchBlock key={q.id} q={q} response={response} setResponse={setResponse} checked={isChecked && showFeedback} revealAll={isChecked} />
+        )}
+        {q.type === "order" && (
+          <OrderBlock key={q.id} q={q} response={response} setResponse={setResponse} checked={isChecked && showFeedback} revealAll={isChecked} />
+        )}
+
+        {isChecked && showFeedback && (
+          <div style={{ ...styles.feedbackBox, borderColor: correct ? "#5EEAD4" : "#FCA5A5" }}>
+            <div style={{ ...styles.feedbackHead, color: correct ? "#5EEAD4" : "#FCA5A5" }}>
+              {correct ? <ShieldCheck size={16} /> : <ShieldAlert size={16} />}
+              {correct ? "Correct" : "Not quite"}
+            </div>
+            <div style={styles.feedbackText}>{q.explanation}</div>
+          </div>
+        )}
+        {isChecked && !showFeedback && (
+          <div style={styles.feedbackBoxQuiet}>Answer locked in. Move to the next question — full explanations appear in the review at the end.</div>
+        )}
+      </div>
+
+      <div style={styles.actionsRow}>
+        {showFeedback && !isChecked && (
+          <button style={{ ...styles.bigBtn, ...styles.bigBtnPrimary }} onClick={onCheck} disabled={!response}>
+            <Check size={18} /> Check answer
+          </button>
+        )}
+        {(isChecked || !showFeedback) && (
+          <button style={{ ...styles.bigBtn, ...styles.bigBtnAlt }} onClick={onNext}>
+            {index + 1 < total ? "Next question" : "Finish"} <ChevronRight size={18} />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ---------- MCQ block ----------
+function McqBlock({ q, response, setResponse, checked, revealAll }) {
+  const sel = response?.selected || [];
+  const toggle = (i) => {
+    if (checked) return;
+    let next;
+    if (q.selectN === 1) {
+      next = [i];
+    } else {
+      next = sel.includes(i) ? sel.filter((x) => x !== i) : [...sel, i];
+    }
+    setResponse({ selected: next });
+  };
+
+  return (
+    <div style={styles.optionList}>
+      {q.options.map((opt, i) => {
+        const isSel = sel.includes(i);
+        let borderColor = "#2A3441";
+        let bg = "transparent";
+        if (revealAll) {
+          if (opt.correct) { borderColor = "#5EEAD4"; bg = "#5EEAD414"; }
+          else if (isSel && !opt.correct) { borderColor = "#FCA5A5"; bg = "#FCA5A514"; }
+        } else if (isSel) {
+          borderColor = "#8FA3B8"; bg = "#8FA3B814";
+        }
+        return (
+          <div key={i}>
+            <button
+              style={{ ...styles.option, borderColor, background: bg }}
+              onClick={() => toggle(i)}
+              disabled={revealAll}
+            >
+              <span style={{
+                ...styles.optionMark,
+                borderColor: isSel ? "#E6EDF3" : "#3A4451",
+                background: isSel ? "#E6EDF3" : "transparent",
+                borderRadius: q.selectN === 1 ? "50%" : "4px",
+              }}>
+                {isSel && <span style={{ color: "#0B0F14", fontSize: 11, fontWeight: 700 }}>✓</span>}
+              </span>
+              <span style={styles.optionText}>{opt.text}</span>
+              {revealAll && opt.correct && <Check size={16} color="#5EEAD4" />}
+              {revealAll && isSel && !opt.correct && <X size={16} color="#FCA5A5" />}
+            </button>
+            {revealAll && (opt.correct || isSel) && (
+              <div style={styles.optionWhy}>{opt.why}</div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ---------- True/False block ----------
+function TfBlock({ q, response, setResponse, checked, revealAll }) {
+  const ans = response?.answers || {};
+  const set = (i, val) => {
+    if (checked) return;
+    setResponse({ answers: { ...ans, [i]: val } });
+  };
+  return (
+    <div style={styles.tfList}>
+      {q.statements.map((s, i) => {
+        const userVal = ans[i];
+        const isRight = revealAll && userVal === s.answer;
+        const isWrong = revealAll && userVal !== undefined && userVal !== s.answer;
+        return (
+          <div key={i} style={styles.tfRow}>
+            <div style={styles.tfText}>{s.text}</div>
+            <div style={styles.tfButtons}>
+              {[true, false].map((v) => {
+                const label = v ? "True" : "False";
+                const active = userVal === v;
+                let color = "#6B7684", border = "#2A3441";
+                if (active && !revealAll) { color = "#E6EDF3"; border = "#8FA3B8"; }
+                if (revealAll && v === s.answer) { color = "#5EEAD4"; border = "#5EEAD4"; }
+                if (revealAll && active && v !== s.answer) { color = "#FCA5A5"; border = "#FCA5A5"; }
+                return (
+                  <button key={label} onClick={() => set(i, v)} disabled={revealAll}
+                    style={{ ...styles.tfBtn, color, borderColor: border }}>
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+            {revealAll && <div style={styles.optionWhy}>{s.why}</div>}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ---------- Match block ----------
+function MatchBlock({ q, response, setResponse, checked, revealAll }) {
+  const rightOptions = useMemo(() => shuffle(q.pairs.map((p) => p.right)), [q]);
+  const picks = response?.picks || {};
+  const setPick = (i, val) => {
+    if (checked) return;
+    setResponse({ picks: { ...picks, [i]: val } });
+  };
+  return (
+    <div style={styles.matchList}>
+      {q.pairs.map((p, i) => {
+        const userPick = picks[i];
+        const right = revealAll && userPick === p.right ? "#5EEAD4" : revealAll && userPick ? "#FCA5A5" : "#2A3441";
+        return (
+          <div key={i} style={styles.matchRow}>
+            <div style={styles.matchLeft}>{p.left}</div>
+            <select
+              value={userPick || ""}
+              disabled={revealAll}
+              onChange={(e) => setPick(i, e.target.value)}
+              style={{ ...styles.matchSelect, borderColor: right }}
+            >
+              <option value="" disabled>Choose a match…</option>
+              {rightOptions.map((r, ri) => <option key={ri} value={r}>{r}</option>)}
+            </select>
+            {revealAll && userPick !== p.right && (
+              <div style={styles.correctAnswerNote}>Correct: {p.right}</div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ---------- Order block ----------
+function OrderBlock({ q, response, setResponse, checked, revealAll }) {
+  const initial = response?.sequence || shuffle(q.items);
+  const [seq, setSeq] = useState(initial);
+  useEffect(() => {
+    if (!response) setResponse({ sequence: initial });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const move = (i, dir) => {
+    if (checked) return;
+    const next = [...seq];
+    const j = i + dir;
+    if (j < 0 || j >= next.length) return;
+    [next[i], next[j]] = [next[j], next[i]];
+    setSeq(next);
+    setResponse({ sequence: next });
+  };
+  return (
+    <div style={styles.orderList}>
+      {seq.map((item, i) => {
+        const isRight = revealAll && q.items[i] === item;
+        return (
+          <div key={item} style={{ ...styles.orderRow, borderColor: revealAll ? (isRight ? "#5EEAD4" : "#FCA5A5") : "#2A3441" }}>
+            <span style={styles.orderIndex}>{i + 1}</span>
+            <span style={styles.orderText}>{item}</span>
+            {!revealAll && (
+              <div style={styles.orderArrows}>
+                <button style={styles.orderArrowBtn} onClick={() => move(i, -1)}><ArrowUp size={14} /></button>
+                <button style={styles.orderArrowBtn} onClick={() => move(i, 1)}><ArrowDown size={14} /></button>
+              </div>
+            )}
+          </div>
+        );
+      })}
+      {revealAll && (
+        <div style={styles.correctAnswerNote}>Correct order: {q.items.join(" → ")}</div>
+      )}
+    </div>
+  );
+}
+
+// ---------- Results (mock exam review) ----------
+function ResultsScreen({ queue, responses, onRestart }) {
+  const items = queue.map((qid) => QUESTIONS.find((q) => q.id === qid));
+  const correctCount = items.filter((q) => isCorrect(q, responses[q.id])).length;
+  const pct = Math.round((correctCount / items.length) * 100);
+
+  return (
+    <div style={styles.menuWrap}>
+      <div style={styles.menuHeader}>
+        <h1 style={styles.h1}>Mock exam debrief</h1>
+        <p style={styles.sub}>
+          Score: <strong style={{ color: pct >= 70 ? "#5EEAD4" : "#FCA5A5" }}>{correctCount}/{items.length} ({pct}%)</strong> — passing benchmark for SC-900 is roughly 700/1000, similar to ~70%.
+        </p>
+      </div>
+
+      <div style={styles.reviewList}>
+        {items.map((q, i) => {
+          const correct = isCorrect(q, responses[q.id]);
+          const d = DOMAINS[q.domain];
+          return (
+            <div key={q.id} style={{ ...styles.reviewCard, borderLeft: `4px solid ${correct ? "#5EEAD4" : "#FCA5A5"}` }}>
+              <div style={styles.reviewHead}>
+                <span style={{ ...styles.domainTagSmall, color: d.color, borderColor: d.color }}>{d.label}</span>
+                {correct ? <Check size={16} color="#5EEAD4" /> : <X size={16} color="#FCA5A5" />}
+              </div>
+              <div style={styles.reviewPrompt}>{i + 1}. {q.prompt}</div>
+              <div style={styles.reviewExplain}>{q.explanation}</div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={styles.actionsRow}>
+        <button style={{ ...styles.bigBtn, ...styles.bigBtnPrimary }} onClick={onRestart}>
+          <RotateCcw size={18} /> Back to menu
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ================= styles =================
+const globalCss = `
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  ::selection { background: #5EEAD455; }
+  button { cursor: pointer; font-family: inherit; }
+  select { font-family: inherit; }
+`;
+
+const styles = {
+  appShell: {
+    minHeight: "100vh",
+    background: "radial-gradient(1200px 600px at 20% -10%, #14202B 0%, #0B0F14 55%)",
+    color: "#E6EDF3",
+    fontFamily: "ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
+    paddingBottom: 60,
+  },
+  topBar: {
+    display: "flex", alignItems: "center", justifyContent: "space-between",
+    padding: "16px 24px", borderBottom: "1px solid #1B2531",
+    position: "sticky", top: 0, background: "#0B0F14EE", backdropFilter: "blur(6px)", zIndex: 10,
+  },
+  brand: { display: "flex", alignItems: "center", gap: 10 },
+  brandTitle: { fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", fontSize: 14, fontWeight: 700, letterSpacing: "0.12em" },
+  brandSub: { fontSize: 11, color: "#6B7684", marginTop: 2 },
+  gaugeWrap: { display: "flex", alignItems: "center", gap: 10 },
+  gaugeText: { textAlign: "right" },
+  gaugePct: { fontFamily: "ui-monospace, monospace", fontSize: 15, fontWeight: 700 },
+  gaugeLabel: { fontSize: 10, color: "#6B7684" },
+
+  menuWrap: { maxWidth: 880, margin: "0 auto", padding: "32px 20px" },
+  menuHeader: { marginBottom: 24 },
+  h1: { fontSize: 28, fontWeight: 800, margin: 0, letterSpacing: "-0.01em" },
+  sub: { color: "#93A1B0", fontSize: 14, lineHeight: 1.6, marginTop: 8, maxWidth: 620 },
+
+  chipRow: { display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 22 },
+  chip: {
+    display: "flex", alignItems: "center", gap: 8, padding: "8px 14px",
+    borderRadius: 999, border: "1px solid", fontSize: 13, fontWeight: 600, background: "transparent",
+  },
+  chipDot: { width: 8, height: 8, borderRadius: "50%" },
+
+  domainStatsGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 28 },
+  domainCard: { background: "#111820", borderRadius: 10, padding: "14px 16px", border: "1px solid #1B2531" },
+  domainCardLabel: { fontSize: 11.5, color: "#93A1B0", marginBottom: 8, minHeight: 32 },
+  domainCardPct: { fontFamily: "ui-monospace, monospace", fontSize: 22, fontWeight: 800 },
+  domainCardSub: { fontSize: 11, color: "#5C6773", marginTop: 4 },
+
+  actionsRow: { display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 24 },
+  bigBtn: {
+    display: "flex", alignItems: "center", gap: 8, padding: "13px 20px", borderRadius: 10,
+    fontSize: 14, fontWeight: 700, border: "none", flex: "1 1 220px", justifyContent: "center",
+  },
+  bigBtnPrimary: { background: "#5EEAD4", color: "#06201C" },
+  bigBtnAlt: { background: "#1B2531", color: "#E6EDF3", border: "1px solid #2A3441" },
+
+  historyBox: { background: "#111820", border: "1px solid #1B2531", borderRadius: 10, padding: 16 },
+  historyTitle: { display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#93A1B0", marginBottom: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" },
+  historyRow: { display: "flex", justifyContent: "space-between", fontSize: 13, padding: "6px 0", borderBottom: "1px solid #1B2531", fontFamily: "ui-monospace, monospace" },
+
+  quizWrap: { maxWidth: 760, margin: "0 auto", padding: "24px 20px" },
+  quizTopRow: { display: "flex", alignItems: "center", gap: 14, marginBottom: 16 },
+  exitBtn: { display: "flex", alignItems: "center", gap: 4, background: "transparent", border: "1px solid #2A3441", color: "#93A1B0", borderRadius: 8, padding: "6px 10px", fontSize: 12 },
+  progressBarOuter: { flex: 1, height: 6, background: "#1B2531", borderRadius: 999, overflow: "hidden" },
+  progressBarInner: { height: "100%", background: "linear-gradient(90deg, #5EEAD4, #C4B5FD)", transition: "width 0.3s ease" },
+  qCounter: { fontSize: 12, fontFamily: "ui-monospace, monospace", color: "#6B7684", minWidth: 50, textAlign: "right" },
+
+  domainTag: { display: "inline-block", fontSize: 11, fontWeight: 700, border: "1px solid", borderRadius: 999, padding: "4px 12px", marginBottom: 14, textTransform: "uppercase", letterSpacing: "0.05em" },
+  domainTagSmall: { display: "inline-block", fontSize: 10, fontWeight: 700, border: "1px solid", borderRadius: 999, padding: "2px 8px" },
+
+  card: { background: "#111820", border: "1px solid #1B2531", borderRadius: 14, padding: 22 },
+  prompt: { fontSize: 17, fontWeight: 600, lineHeight: 1.5, marginBottom: 6 },
+  hint: { fontSize: 12, color: "#C4B5FD", marginBottom: 14, fontWeight: 600 },
+
+  optionList: { display: "flex", flexDirection: "column", gap: 8, marginTop: 14 },
+  option: { display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left", padding: "11px 14px", borderRadius: 10, border: "1px solid", background: "transparent", color: "#E6EDF3", fontSize: 14 },
+  optionMark: { width: 18, height: 18, border: "1.5px solid", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" },
+  optionText: { flex: 1, lineHeight: 1.4 },
+  optionWhy: { fontSize: 12.5, color: "#8B98A6", padding: "2px 14px 8px 42px", lineHeight: 1.5 },
+
+  tfList: { display: "flex", flexDirection: "column", gap: 14, marginTop: 14 },
+  tfRow: { paddingBottom: 12, borderBottom: "1px solid #1B2531" },
+  tfText: { fontSize: 14, marginBottom: 8, lineHeight: 1.5 },
+  tfButtons: { display: "flex", gap: 8 },
+  tfBtn: { padding: "6px 16px", borderRadius: 8, border: "1px solid", background: "transparent", fontSize: 13, fontWeight: 600 },
+
+  matchList: { display: "flex", flexDirection: "column", gap: 10, marginTop: 14 },
+  matchRow: { display: "flex", flexDirection: "column", gap: 6 },
+  matchLeft: { fontSize: 13.5, fontWeight: 700, color: "#C4B5FD" },
+  matchSelect: { background: "#0B0F14", color: "#E6EDF3", border: "1px solid", borderRadius: 8, padding: "9px 10px", fontSize: 13.5 },
+  correctAnswerNote: { fontSize: 12, color: "#5EEAD4", fontStyle: "italic" },
+
+  orderList: { display: "flex", flexDirection: "column", gap: 8, marginTop: 14 },
+  orderRow: { display: "flex", alignItems: "center", gap: 10, border: "1px solid", borderRadius: 10, padding: "10px 12px" },
+  orderIndex: { fontFamily: "ui-monospace, monospace", color: "#6B7684", fontSize: 13, width: 18 },
+  orderText: { flex: 1, fontSize: 13.5 },
+  orderArrows: { display: "flex", gap: 4 },
+  orderArrowBtn: { background: "#1B2531", border: "1px solid #2A3441", color: "#E6EDF3", borderRadius: 6, padding: 4 },
+
+  feedbackBox: { marginTop: 18, border: "1px solid", borderRadius: 10, padding: "14px 16px" },
+  feedbackBoxQuiet: { marginTop: 18, border: "1px solid #1B2531", borderRadius: 10, padding: "12px 16px", fontSize: 13, color: "#6B7684" },
+  feedbackHead: { display: "flex", alignItems: "center", gap: 6, fontWeight: 700, fontSize: 13, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.04em" },
+  feedbackText: { fontSize: 13.5, color: "#C7D2DD", lineHeight: 1.6 },
+
+  reviewList: { display: "flex", flexDirection: "column", gap: 12, marginBottom: 24 },
+  reviewCard: { background: "#111820", border: "1px solid #1B2531", borderRadius: 10, padding: "14px 16px" },
+  reviewHead: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 },
+  reviewPrompt: { fontSize: 14, fontWeight: 600, marginBottom: 6, lineHeight: 1.5 },
+  reviewExplain: { fontSize: 12.5, color: "#8B98A6", lineHeight: 1.5 },
+};
+
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
+</script>
+</body>
+</html>

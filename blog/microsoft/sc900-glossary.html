@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SC-900 Glossary & Mix-ups — Juan-Pierre Louw</title>
+<meta name="description" content="Interactive SC-900 glossary and commonly confused term pairs." />
+<style>
+  html, body { margin:0; padding:0; background:#0B0F14; }
+  #root { min-height:100vh; }
+  .boot-loader {
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    color:#6B7684; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:13px;
+    background: radial-gradient(1200px 600px at 20% -10%, #14202B 0%, #0B0F14 55%);
+  }
+</style>
+</head>
+<body>
+<div id="root"><div class="boot-loader">Loading…</div></div>
+
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useMemo, useCallback } = React;
+
+const IconBase = ({ size = 24, color = "currentColor", strokeWidth = 2, style, children }) =>
+  React.createElement("svg", {
+    width: size, height: size, viewBox: "0 0 24 24", fill: "none",
+    stroke: color, strokeWidth, strokeLinecap: "round", strokeLinejoin: "round", style,
+  }, children);
+
+const Shield = (p) => React.createElement(IconBase, p, React.createElement("path", { d: "M12 2 L20 6 V11 C20 16 16.5 20 12 22 C7.5 20 4 16 4 11 V6 Z" }));
+const ShieldCheck = (p) => React.createElement(IconBase, p,
+  React.createElement("path", { d: "M12 2 L20 6 V11 C20 16 16.5 20 12 22 C7.5 20 4 16 4 11 V6 Z" }),
+  React.createElement("polyline", { points: "9,12 11,14 15,9" }));
+const ShieldAlert = (p) => React.createElement(IconBase, p,
+  React.createElement("path", { d: "M12 2 L20 6 V11 C20 16 16.5 20 12 22 C7.5 20 4 16 4 11 V6 Z" }),
+  React.createElement("line", { x1: 12, y1: 8, x2: 12, y2: 13 }),
+  React.createElement("circle", { cx: 12, cy: 16.3, r: 0.6, fill: p.color || "currentColor", stroke: "none" }));
+const Check = (p) => React.createElement(IconBase, p, React.createElement("polyline", { points: "4,12 9,17 20,6" }));
+const X = (p) => React.createElement(IconBase, p,
+  React.createElement("line", { x1: 5, y1: 5, x2: 19, y2: 19 }),
+  React.createElement("line", { x1: 19, y1: 5, x2: 5, y2: 19 }));
+const ChevronRight = (p) => React.createElement(IconBase, p, React.createElement("polyline", { points: "9,5 16,12 9,19" }));
+const ChevronLeft = (p) => React.createElement(IconBase, p, React.createElement("polyline", { points: "15,5 8,12 15,19" }));
+const ChevronDown = (p) => React.createElement(IconBase, p, React.createElement("polyline", { points: "5,9 12,16 19,9" }));
+const ChevronUp = (p) => React.createElement(IconBase, p, React.createElement("polyline", { points: "5,15 12,8 19,15" }));
+const RotateCcw = (p) => React.createElement(IconBase, p,
+  React.createElement("path", { d: "M3 11 A9 9 0 1 1 6 17.5" }),
+  React.createElement("polyline", { points: "3,5 3,11 9,11" }));
+const Play = (p) => React.createElement(IconBase, p, React.createElement("path", { d: "M6 4 L20 12 L6 20 Z", fill: p.color || "currentColor", stroke: "none" }));
+const ListChecks = (p) => React.createElement(IconBase, p,
+  React.createElement("polyline", { points: "3,6 5,8 9,4" }),
+  React.createElement("line", { x1: 12, y1: 6, x2: 21, y2: 6 }),
+  React.createElement("polyline", { points: "3,13 5,15 9,11" }),
+  React.createElement("line", { x1: 12, y1: 13, x2: 21, y2: 13 }),
+  React.createElement("line", { x1: 5, y1: 19, x2: 21, y2: 19 }));
+const Target = (p) => React.createElement(IconBase, p,
+  React.createElement("circle", { cx: 12, cy: 12, r: 8 }),
+  React.createElement("circle", { cx: 12, cy: 12, r: 4.5 }),
+  React.createElement("circle", { cx: 12, cy: 12, r: 1, fill: p.color || "currentColor", stroke: "none" }));
+const ArrowUp = (p) => React.createElement(IconBase, p,
+  React.createElement("line", { x1: 12, y1: 19, x2: 12, y2: 5 }),
+  React.createElement("polyline", { points: "6,11 12,5 18,11" }));
+const ArrowDown = (p) => React.createElement(IconBase, p,
+  React.createElement("line", { x1: 12, y1: 5, x2: 12, y2: 19 }),
+  React.createElement("polyline", { points: "6,13 12,19 18,13" }));
+const Radar = (p) => React.createElement(IconBase, p,
+  React.createElement("circle", { cx: 12, cy: 12, r: 9 }),
+  React.createElement("path", { d: "M12 12 L12 4 A8 8 0 0 1 19 9 Z", fill: p.color || "currentColor", stroke: "none", opacity: 0.35 }),
+  React.createElement("circle", { cx: 12, cy: 12, r: 1, fill: p.color || "currentColor", stroke: "none" }));
+const Menu = (p) => React.createElement(IconBase, p,
+  React.createElement("line", { x1: 4, y1: 7, x2: 20, y2: 7 }),
+  React.createElement("line", { x1: 4, y1: 12, x2: 20, y2: 12 }),
+  React.createElement("line", { x1: 4, y1: 17, x2: 20, y2: 17 }));
+const Filter = (p) => React.createElement(IconBase, p, React.createElement("polygon", { points: "4,4 20,4 14,12 14,19 10,17 10,12" }));
+const Info = (p) => React.createElement(IconBase, p,
+  React.createElement("circle", { cx: 12, cy: 12, r: 9 }),
+  React.createElement("line", { x1: 12, y1: 11, x2: 12, y2: 16 }),
+  React.createElement("circle", { cx: 12, cy: 7.5, r: 0.6, fill: p.color || "currentColor", stroke: "none" }));
+const CheckCircle2 = (p) => React.createElement(IconBase, p,
+  React.createElement("circle", { cx: 12, cy: 12, r: 9 }),
+  React.createElement("polyline", { points: "8,12.5 11,15.5 16,9" }));
+const Circle = (p) => React.createElement(IconBase, p, React.createElement("circle", { cx: 12, cy: 12, r: 9 }));
+const Sparkles = (p) => React.createElement(IconBase, p,
+  React.createElement("path", { d: "M12 3 L13.2 9 L19 10.2 L13.2 11.4 L12 17.4 L10.8 11.4 L5 10.2 L10.8 9 Z", fill: p.color || "currentColor", stroke: "none" }),
+  React.createElement("path", { d: "M19 15 L19.6 17.4 L22 18 L19.6 18.6 L19 21 L18.4 18.6 L16 18 L18.4 17.4 Z", fill: p.color || "currentColor", stroke: "none", opacity: 0.7 }));
+const Search = (p) => React.createElement(IconBase, p,
+  React.createElement("circle", { cx: 10.5, cy: 10.5, r: 6.5 }),
+  React.createElement("line", { x1: 15.5, y1: 15.5, x2: 21, y2: 21 }));
+const BookOpen = (p) => React.createElement(IconBase, p,
+  React.createElement("path", { d: "M2 5 C5 4 8 4 12 6 C16 4 19 4 22 5 V18 C19 17 16 17 12 19 C8 17 5 17 2 18 Z" }),
+  React.createElement("line", { x1: 12, y1: 6, x2: 12, y2: 19 }));
+const Shuffle = (p) => React.createElement(IconBase, p,
+  React.createElement("path", { d: "M3 6 H8 L18 18 H21" }),
+  React.createElement("path", { d: "M3 18 H8 L11 14" }),
+  React.createElement("path", { d: "M14 6 H21" }),
+  React.createElement("polyline", { points: "18,3 21,6 18,9" }),
+  React.createElement("polyline", { points: "18,15 21,18 18,21" }));
+const AlertTriangle = (p) => React.createElement(IconBase, p,
+  React.createElement("path", { d: "M12 3 L22 20 H2 Z" }),
+  React.createElement("line", { x1: 12, y1: 9, x2: 12, y2: 14 }),
+  React.createElement("circle", { cx: 12, cy: 17, r: 0.6, fill: p.color || "currentColor", stroke: "none" }));
+
+// window.storage polyfill (real deployment: use localStorage instead of the Claude-artifact sandbox API)
+if (!window.storage) {
+  window.storage = {
+    get: async (key) => {
+      try {
+        const v = localStorage.getItem(key);
+        return v === null ? null : { key, value: v, shared: false };
+      } catch (e) { return null; }
+    },
+    set: async (key, value) => {
+      try { localStorage.setItem(key, value); return { key, value, shared: false }; }
+      catch (e) { return null; }
+    },
+  };
+}
+
+
+
+
+// SC-900 Glossary & Confusable Terms — reference data
+// Domains match the other apps in this set: concepts | entra | security | compliance
+
+const DOMAINS = {
+  concepts: { label: "Concepts", color: "#5EEAD4" },
+  entra: { label: "Entra", color: "#C4B5FD" },
+  security: { label: "Security", color: "#FCA5A5" },
+  compliance: { label: "Compliance", color: "#FDE68A" },
+};
+
+// ---------------- GLOSSARY ----------------
+// Each term: id, domain, definition, and an optional "watch" one-liner
+// flagging the specific mix-up to avoid (kept short — the full contrast lives in CONFUSION_PAIRS).
+const GLOSSARY = [
+  // ===== concepts =====
+  { id: "zero-trust", domain: "concepts", term: "Zero Trust", definition: "A security strategy built on three principles: verify explicitly, use least privileged access, and assume breach. It replaces the old \"trust anything inside the network perimeter\" model with continuous verification of every request.", watch: "Not a product — it's a strategy Entra, Defender, and Sentinel all implement." },
+  { id: "verify-explicitly", domain: "concepts", term: "Verify explicitly", definition: "One of the three Zero Trust principles: always authenticate and authorize based on all available signals (user, location, device, service, workload), not just \"they're on the network.\"" },
+  { id: "least-privilege", domain: "concepts", term: "Least privileged access", definition: "One of the three Zero Trust principles: limit user access with just-in-time and just-enough-access (JIT/JEA), risk-based adaptive policies, and data protection." },
+  { id: "assume-breach", domain: "concepts", term: "Assume breach", definition: "One of the three Zero Trust principles: operate as if an attacker is already inside. Drives segmentation, end-to-end encryption, analytics, and rapid detection/response to limit blast radius." },
+  { id: "shared-responsibility", domain: "concepts", term: "Shared responsibility model", definition: "Defines which security tasks fall to the cloud provider and which stay with the customer. The split shifts as you move from IaaS → PaaS → SaaS: the provider takes on more (hardware, OS, and eventually most of the app stack), but the customer never stops owning data, identities, and endpoint devices." },
+  { id: "defense-in-depth", domain: "concepts", term: "Defense in depth", definition: "A layered security strategy: physical security → identity & access → perimeter → network → compute → application → data. Each layer is a fallback if an earlier one fails." },
+  { id: "cia-triad", domain: "concepts", term: "CIA triad", definition: "Confidentiality (only authorized people see data), Integrity (data isn't tampered with), Availability (systems and data are accessible when needed) — the three goals most security controls exist to protect." },
+  { id: "symmetric-encryption", domain: "concepts", term: "Symmetric encryption", definition: "Uses one shared key for both encrypting and decrypting data. Fast, but the key must be distributed securely to everyone who needs it." },
+  { id: "asymmetric-encryption", domain: "concepts", term: "Asymmetric encryption", definition: "Uses a public/private key pair — data encrypted with one key can only be decrypted with the other. Solves the key-distribution problem symmetric encryption has, at the cost of speed." },
+  { id: "hashing", domain: "concepts", term: "Hashing", definition: "A one-way function that converts input into a fixed-length value. Used to verify data hasn't changed (integrity) or to store passwords without ever storing the plaintext. It cannot be reversed." },
+  { id: "salting", domain: "concepts", term: "Salting", definition: "Adding a random value to input before hashing, so identical inputs (like two users with the same password) produce different hashes — defeats precomputed \"rainbow table\" attacks." },
+  { id: "data-residency", domain: "concepts", term: "Data residency", definition: "Where data is physically stored or processed — often dictated by law (e.g., a regulation requiring citizens' data to stay within national borders)." },
+  { id: "data-sovereignty", domain: "concepts", term: "Data sovereignty", definition: "Whose laws govern the data, based on where it resides. Data stored in France is subject to French/EU law regardless of where the company that owns it is headquartered." },
+  { id: "non-repudiation", domain: "concepts", term: "Non-repudiation", definition: "Ensures a sender cannot later deny having sent a message or performed an action — typically achieved through digital signatures and audit trails." },
+  { id: "federation", domain: "concepts", term: "Federation", definition: "A trust relationship between identity providers that lets a user authenticate once with their home provider and access a partner's resources, without a separate account or login." },
+  { id: "authentication", domain: "concepts", term: "Authentication (AuthN)", definition: "Proves who an identity is — a user, device, or app — usually via something you know, have, or are. Always happens before authorization." },
+  { id: "authorization", domain: "concepts", term: "Authorization (AuthZ)", definition: "Determines what an already-authenticated identity is allowed to do or access. Runs after authentication succeeds." },
+  { id: "identity", domain: "concepts", term: "Identity", definition: "The set of attributes that define a user, device, or application. Modern identity extends well beyond humans — a thermostat or a service account can have its own identity." },
+  { id: "shift-left", domain: "concepts", term: "Shift-left (security)", definition: "Moving security earlier into the development lifecycle — hardening build/deploy pipelines rather than only defending production. Named because attackers now target CI/CD tooling directly." },
+
+  // ===== entra =====
+  { id: "entra-id", domain: "entra", term: "Microsoft Entra ID", definition: "Microsoft's cloud-based identity and access management service (formerly Azure AD). Handles authentication, SSO, Conditional Access, and MFA for users, devices, and apps." },
+  { id: "tenant", domain: "entra", term: "Tenant", definition: "A dedicated instance of Entra ID for one organization. Every tenant has exactly one directory — the terms are often used interchangeably." },
+  { id: "directory", domain: "entra", term: "Directory", definition: "The actual data store inside a tenant, holding identity objects like users, groups, and devices." },
+  { id: "conditional-access", domain: "entra", term: "Conditional Access", definition: "Entra's policy engine: if-then rules that grant, block, or require extra proof of access based on signals like user, location, device state, and risk level." },
+  { id: "authentication-context", domain: "entra", term: "Authentication context", definition: "Lets you apply extra Conditional Access requirements (like requiring a managed device) to one specific resource inside an app — e.g., only the sensitive SharePoint library, not the whole site." },
+  { id: "mfa", domain: "entra", term: "Multi-factor authentication (MFA)", definition: "Requires at least two of: something you know (password), something you have (phone, token), something you are (biometric) — before granting access." },
+  { id: "sso", domain: "entra", term: "Single sign-on (SSO)", definition: "Lets a user authenticate once and access multiple applications without signing in again — typically within one identity domain." },
+  { id: "identity-protection", domain: "entra", term: "Microsoft Entra ID Protection", definition: "Evaluates user risk (is this account likely compromised?) and sign-in risk (is this specific login suspicious?) using signals like leaked credentials and unfamiliar locations." },
+  { id: "id-governance", domain: "entra", term: "Microsoft Entra ID Governance", definition: "The umbrella for access lifecycle features: entitlement management, access reviews, Privileged Identity Management (PIM), lifecycle workflows, and terms of use." },
+  { id: "entitlement-mgmt", domain: "entra", term: "Entitlement management", definition: "Automates granting, reviewing, and expiring access via access packages — e.g., a contractor's access can be set to expire automatically after 30 days, no manual tracking needed." },
+  { id: "access-reviews", domain: "entra", term: "Access reviews", definition: "Periodic, often manual check-ins asking \"does this person still need this access?\" Can be single- or multi-stage, and can auto-remove access if a reviewer doesn't respond." },
+  { id: "pim", domain: "entra", term: "Privileged Identity Management (PIM)", definition: "Grants just-in-time, time-bound elevation to admin/privileged roles instead of standing access — reduces the attack surface of always-on admin accounts." },
+  { id: "inbound-provisioning", domain: "entra", term: "Inbound provisioning", definition: "Creates an identity in Entra ID directly from an authoritative HR source (like Workday), ahead of a new employee's first day." },
+  { id: "user-provisioning", domain: "entra", term: "User provisioning", definition: "Pushes an already-existing Entra ID identity out into external SaaS apps (like Salesforce or ServiceNow) — assumes the identity already exists." },
+  { id: "external-id", domain: "entra", term: "Microsoft Entra External ID", definition: "Manages identities for external users — business partners (B2B) and consumer/customer identities (replacing the old Azure AD B2C)." },
+  { id: "cloud-sync", domain: "entra", term: "Microsoft Entra Cloud Sync", definition: "Synchronizes and provisions users/groups from on-premises Active Directory to Entra ID for hybrid identity — a lightweight agent-based alternative to Entra Connect." },
+  { id: "device-join", domain: "entra", term: "Entra joined / Entra hybrid joined / Entra registered", definition: "Joined = cloud-only, organization-owned and managed. Hybrid joined = exists in both on-prem AD and Entra ID. Registered = typically a personal/BYOD device with limited access." },
+  { id: "custom-banned-password", domain: "entra", term: "Custom banned password list", definition: "Organization-specific terms (brand names, locations) added on top of Microsoft's global banned password list, with fuzzy matching to block close variants." },
+  { id: "workforce-tenant", domain: "entra", term: "Workforce tenant vs. external tenant", definition: "A workforce tenant manages employees and internal resources. An external tenant is built for consumer or business-customer identity — a separate, customer-facing configuration." },
+  { id: "global-secure-access", domain: "entra", term: "Global Secure Access dashboard", definition: "Aggregates cross-tenant sign-in anomalies, device inconsistencies, and network health signals into one holistic view." },
+
+  // ===== security =====
+  { id: "nsg", domain: "security", term: "Network Security Group (NSG)", definition: "Layer 3/4 allow/deny rules applied to a subnet or network interface. Rules are evaluated in ascending priority order (lowest number first); default rules can't be deleted but can be overridden." },
+  { id: "asg", domain: "security", term: "Application Security Group (ASG)", definition: "Lets you group VMs by logical role (e.g., \"web-tier\") so NSG rules apply to the group rather than individual IPs — simplifies rule management for multi-tier apps." },
+  { id: "azure-firewall", domain: "security", term: "Azure Firewall", definition: "A managed, stateful network firewall with built-in threat intelligence, filtering at both network and application layers (L3–L7) based on IP, port, and FQDN." },
+  { id: "waf", domain: "security", term: "Web Application Firewall (WAF)", definition: "Layer-7 protection specifically for web apps against OWASP Top 10 threats (SQL injection, XSS), with automatically updated rules." },
+  { id: "ddos-protection", domain: "security", term: "Azure DDoS Protection", definition: "Mitigates volumetric, protocol, and resource-layer attacks. The free Basic tier requires no setup; Network Protection adds detailed telemetry, alerting, and cost protection." },
+  { id: "bastion", domain: "security", term: "Azure Bastion", definition: "Browser-based RDP/SSH access through the Azure portal via TLS — no public IP or open management port needed on the VM." },
+  { id: "key-vault", domain: "security", term: "Azure Key Vault", definition: "Centralized, access-scoped storage for secrets, keys, and certificates — apps retrieve them at runtime instead of hardcoding credentials." },
+  { id: "defender-xdr", domain: "security", term: "Microsoft Defender XDR", definition: "Unifies signals and incidents across Defender for Endpoint, Office 365, Identity, and Cloud Apps into one correlated portal — the \"X\" is for extended, covering multiple domains rather than just endpoints." },
+  { id: "defender-endpoint", domain: "security", term: "Defender for Endpoint", definition: "EDR (endpoint detection & response), next-gen protection, and attack surface reduction for devices." },
+  { id: "defender-identity", domain: "security", term: "Defender for Identity", definition: "Detects identity-based attacks (lateral movement, credential theft) using signals from on-premises Active Directory domain controllers." },
+  { id: "defender-cloud-apps", domain: "security", term: "Defender for Cloud Apps", definition: "A cloud access security broker (CASB): discovers shadow IT (cloud discovery), governs risky OAuth app permissions (app governance), and applies session controls." },
+  { id: "defender-cloud", domain: "security", term: "Microsoft Defender for Cloud", definition: "Cloud Security Posture Management (CSPM) + Cloud Workload Protection (CWPP) for Azure, AWS, and GCP resources — home of Secure Score and per-workload plans like Defender for SQL or Key Vault." },
+  { id: "defender-vuln-mgmt", domain: "security", term: "Defender Vulnerability Management", definition: "Continuous asset discovery, risk-based prioritization (using threat intelligence and breach likelihood), and remediation tracking." },
+  { id: "cspm", domain: "security", term: "CSPM (Cloud Security Posture Management)", definition: "Continuously assesses configurations against best practices and compliance benchmarks — the \"are we configured correctly\" layer. Foundational CSPM is free in Defender for Cloud." },
+  { id: "cwpp", domain: "security", term: "CWPP (Cloud Workload Protection Platform)", definition: "Provides tailored, runtime threat protection for specific workload types — VMs, containers, databases, storage — the \"is something actively attacking this workload\" layer." },
+  { id: "sentinel", domain: "security", term: "Microsoft Sentinel", definition: "A cloud-native SIEM (collects & correlates security data to detect threats) combined with SOAR (automates the response) — a single platform for detection, investigation, and response." },
+  { id: "siem", domain: "security", term: "SIEM", definition: "Security Information and Event Management — aggregates and analyzes data across the environment to detect threats and anomalies. The \"detect\" half of Sentinel." },
+  { id: "soar", domain: "security", term: "SOAR", definition: "Security Orchestration, Automation, and Response — executes predefined workflows (block an IP, disable an account) in response to what SIEM detects. The \"respond\" half of Sentinel." },
+  { id: "analytics-rules", domain: "security", term: "Analytics rules", definition: "Sentinel's detection logic — pre-built or custom rules that turn raw ingested log data into alerts." },
+  { id: "playbooks", domain: "security", term: "Playbooks", definition: "Sentinel's automated response workflows, built on Azure Logic Apps — e.g., block an IP, notify a team, or update a ticket without manual action." },
+  { id: "hunting-queries", domain: "security", term: "Hunting queries", definition: "Analyst-driven, proactive KQL searches for threats that haven't triggered an alert yet — the opposite of waiting for automated detection." },
+  { id: "workbooks", domain: "security", term: "Workbooks", definition: "Interactive dashboards for visualizing Sentinel data and trends — the reporting/visualization layer, not automation." },
+  { id: "watchlists", domain: "security", term: "Watchlists", definition: "User-defined reference lists (e.g., terminated employees, high-value assets) that enrich detection and correlation context." },
+  { id: "edr", domain: "security", term: "EDR (Endpoint Detection & Response)", definition: "Post-detection investigation and response for a single surface — endpoints. Traces attacker activity across devices and supports remediation." },
+  { id: "xdr", domain: "security", term: "XDR (Extended Detection & Response)", definition: "Correlates signals across multiple surfaces — endpoint, email, identity, cloud apps — into unified incidents, rather than one disconnected alert per product." },
+  { id: "asr", domain: "security", term: "Attack surface reduction (ASR)", definition: "A preventive Defender for Endpoint capability — configuration rules and exploit mitigation that block risky behavior (like suspicious scripts) before it can run." },
+  { id: "ngp", domain: "security", term: "Next-generation protection (NGP)", definition: "Real-time, cloud-delivered heuristic and behavior-based defense in Defender for Endpoint — predicts and blocks new attack variants, not just known signatures." },
+  { id: "security-copilot", domain: "security", term: "Microsoft Security Copilot", definition: "A generative-AI layer embedded in Defender, Sentinel, and Entra. Summarizes incidents, turns natural language into KQL, and explains suspicious scripts — augments analysts rather than replacing them." },
+  { id: "session-orchestrator", domain: "security", term: "Session & orchestrator (Security Copilot)", definition: "A session is the ongoing conversation that keeps context across follow-up prompts. The orchestrator is the component behind the scenes that assembles the right capabilities to answer each prompt." },
+  { id: "app-governance", domain: "security", term: "App governance", definition: "The specific Defender for Cloud Apps feature for monitoring and controlling OAuth apps with excessive permissions." },
+  { id: "cloud-discovery", domain: "security", term: "Cloud discovery", definition: "Identifies risky or unsanctioned SaaS app usage (shadow IT) across the organization — broader visibility, not permission-level control." },
+  { id: "exposure-mgmt", domain: "security", term: "Microsoft Security Exposure Management", definition: "Simulates attack paths to visualize exploitable weaknesses, and generates a company-wide secure score with tracked improvement actions." },
+  { id: "service-trust-portal", domain: "security", term: "Service Trust Portal", definition: "Microsoft's public library of audit reports, penetration test attestations, privacy resources, and BCDR documentation — proof of Microsoft's own compliance, not a tool for auditing your tenant." },
+
+  // ===== compliance =====
+  { id: "purview", domain: "compliance", term: "Microsoft Purview", definition: "The umbrella product for data governance, security, and compliance — sensitivity labels, DLP, retention, eDiscovery, audit, insider risk, and more all live here." },
+  { id: "priva", domain: "compliance", term: "Microsoft Priva", definition: "A smaller, privacy-specific product family (separate from Purview) focused on personal data: Privacy Assessments and Privacy Risk Management." },
+  { id: "sensitivity-labels", domain: "compliance", term: "Sensitivity labels", definition: "Persistently classify and protect content (encryption, content marking) with metadata that travels with the file, even if it's moved or shared." },
+  { id: "label-policies", domain: "compliance", term: "Label policies", definition: "Publish sensitivity labels to specific users or groups so they can actually apply them in Office apps." },
+  { id: "mandatory-labeling", domain: "compliance", term: "Mandatory labeling", definition: "Forces a user to select a label before sending or saving content — no unlabeled content allowed." },
+  { id: "justification-requirement", domain: "compliance", term: "Justification requirement", definition: "Prompts a user to explain why they're removing or downgrading a label — an accountability step, not a labeling rule itself." },
+  { id: "dlp", domain: "compliance", term: "Data Loss Prevention (DLP)", definition: "Policy tips and blocking rules that detect sensitive content patterns (like credit card numbers) and stop them leaving via email, Teams, SharePoint, or endpoints — acts on content, regardless of whether it's labeled." },
+  { id: "retention-policy", domain: "compliance", term: "Retention policies & labels (Data Lifecycle Management)", definition: "Keep or automatically delete content on a defined schedule, scoped to locations, sites, or users." },
+  { id: "records-mgmt", domain: "compliance", term: "Records Management", definition: "Manages legally significant content with disposition reviews — a human must approve deletion before it happens. A regulatory record can't have its label removed even by a Global Admin; a regular record is more flexible." },
+  { id: "insider-risk-mgmt", domain: "compliance", term: "Insider Risk Management", definition: "Detects risky user behavior (IP theft, data leakage, policy violations) using ML, with built-in collaboration workflows for HR and legal." },
+  { id: "communication-compliance", domain: "compliance", term: "Communication Compliance", definition: "Flags policy violations — harassment, sensitive data sharing — in Teams, email, and Copilot conversations using classifier conditions." },
+  { id: "ediscovery", domain: "compliance", term: "eDiscovery (Standard / Premium)", definition: "Searches, holds, reviews, and exports content for legal or investigative matters. Premium adds OCR, Teams conversation threading, and Security Copilot summarization." },
+  { id: "audit", domain: "compliance", term: "Audit (Standard / Premium)", definition: "The unified audit log for user/admin activity. Standard retains ~180 days; Premium extends retention to a year and adds forensic-level mail tracking (accessed, replied, forwarded) plus higher-bandwidth API access." },
+  { id: "content-explorer", domain: "compliance", term: "Content Explorer", definition: "Shows what content has been labeled or classified, and where it lives (Exchange, SharePoint, OneDrive) — a snapshot of placement." },
+  { id: "activity-explorer", domain: "compliance", term: "Activity Explorer", definition: "Tracks user-level activity on sensitive content over time — including label downgrades — a record of behavior, not placement." },
+  { id: "compliance-manager", domain: "compliance", term: "Compliance Manager", definition: "Tracks a compliance score and improvement actions (grouped into technical and operational categories) against specific regulations and standards." },
+  { id: "data-steward", domain: "compliance", term: "Data steward", definition: "Maintains glossary consistency and ensures data discovery — the person who keeps terminology aligned across the org." },
+  { id: "data-owner", domain: "compliance", term: "Data owner", definition: "Manages data access, classifications, and quality for a specific data asset — the person accountable for it." },
+  { id: "governance-domain", domain: "compliance", term: "Governance domain", definition: "A Purview construct mapping data ownership to business functions (e.g., \"customer experience\"). A data product can be discovered across domains but is owned by only one." },
+  { id: "trainable-classifiers", domain: "compliance", term: "Trainable classifiers", definition: "AI models trained to recognize patterns in unstructured content (emails, documents) — not usable for structured database fields." },
+  { id: "information-barriers", domain: "compliance", term: "Information barriers", definition: "Restrict communication between specified groups (e.g., traders and research) — enforce separation, never allow bypassing it." },
+  { id: "bridge-letter", domain: "compliance", term: "Bridge letter", definition: "An interim document confirming no material changes occurred since the last audit report — it supplements, but never replaces, the report itself." },
+  { id: "privacy-assessments", domain: "compliance", term: "Priva Privacy Assessments", definition: "Automates discovering, documenting, and evaluating personal data use, replacing manual forms and spreadsheets." },
+  { id: "privacy-risk-mgmt", domain: "compliance", term: "Priva Privacy Risk Management", definition: "Detects risky data patterns (hoarding, transfers) and lets you tag for review, notify content owners, or make content private." },
+];
+
+// ---------------- CONFUSABLE PAIRS ----------------
+// Curated head-to-head contrasts for the terms SC-900 test-takers mix up most.
+const CONFUSION_PAIRS = [
+  {
+    id: "authn-authz",
+    domain: "concepts",
+    title: "Authentication vs. Authorization",
+    trap: "Both sound like \"letting someone in,\" and questions often describe a login that partly works.",
+    tell: "If the question says login succeeded but access to something specific is blocked, that's authorization. If login itself fails, that's authentication.",
+    items: [
+      { term: "Authentication (AuthN)", note: "Proves who you are. Happens first." },
+      { term: "Authorization (AuthZ)", note: "Decides what you can do. Happens second, and only after authentication succeeds." },
+    ],
+  },
+  {
+    id: "residency-sovereignty",
+    domain: "concepts",
+    title: "Data residency vs. Data sovereignty",
+    trap: "Both are about \"where data lives\" and get used almost interchangeably in casual speech.",
+    tell: "Residency = the physical location. Sovereignty = whose legal jurisdiction applies because of that location. Residency is geography; sovereignty is law.",
+    items: [
+      { term: "Data residency", note: "Where data is physically stored or processed." },
+      { term: "Data sovereignty", note: "Whose laws govern that data, based on where it resides." },
+    ],
+  },
+  {
+    id: "encryption-hashing",
+    domain: "concepts",
+    title: "Encryption vs. hashing (vs. salting)",
+    trap: "All three transform data into something unreadable, so it's easy to assume they're interchangeable — including assuming hashing can be \"decrypted.\"",
+    tell: "Encryption is reversible (with the right key) — it's for confidentiality. Hashing is one-way and irreversible — it's for integrity/verification. Salting doesn't stand alone; it strengthens hashing.",
+    items: [
+      { term: "Symmetric encryption", note: "One shared key, both directions. Reversible." },
+      { term: "Asymmetric encryption", note: "Public/private key pair. Reversible, solves key distribution." },
+      { term: "Hashing", note: "One-way. Never reversible — used to verify, not to decrypt." },
+      { term: "Salting", note: "Adds randomness before hashing so identical inputs hash differently." },
+    ],
+  },
+  {
+    id: "sso-federation",
+    domain: "concepts",
+    title: "Single sign-on vs. Federation",
+    trap: "Both let a user avoid logging in twice, so they read as synonyms.",
+    tell: "SSO typically works within one identity domain/provider. Federation is what makes SSO work across two separate, mutually-trusting identity providers/organizations.",
+    items: [
+      { term: "Single sign-on (SSO)", note: "One login, multiple apps — usually one identity provider." },
+      { term: "Federation", note: "Trust relationship that lets provider A accept a token issued by provider B." },
+    ],
+  },
+  {
+    id: "entra-id-vs-adds",
+    domain: "entra",
+    title: "Microsoft Entra ID vs. Active Directory Domain Services (AD DS)",
+    trap: "Both are \"the directory\" in their respective world, and hybrid environments run both at once, which blurs the line.",
+    tell: "AD DS is on-premises, using domain controllers. Entra ID is Microsoft's cloud identity service. Cloud Sync/Entra Connect bridges the two — it doesn't merge them into one thing.",
+    items: [
+      { term: "Active Directory Domain Services (AD DS)", note: "On-prem directory; a domain controller authenticates and authorizes." },
+      { term: "Microsoft Entra ID", note: "Cloud-based identity platform; no domain controller involved." },
+    ],
+  },
+  {
+    id: "entitlement-vs-review-vs-pim",
+    domain: "entra",
+    title: "Entitlement management vs. Access reviews vs. PIM",
+    trap: "All three are Entra ID Governance features about \"who has access to what\" — easy to jumble which one automates what.",
+    tell: "Entitlement management automates the full grant → expire lifecycle (no human review needed). Access reviews are periodic checks that usually need a human decision. PIM is specifically about elevating to privileged/admin roles just-in-time, not everyday app access.",
+    items: [
+      { term: "Entitlement management", note: "Automated access packages with built-in expiration." },
+      { term: "Access reviews", note: "Periodic \"do they still need this?\" checks, often manual." },
+      { term: "Privileged Identity Management (PIM)", note: "Just-in-time elevation to admin roles only." },
+    ],
+  },
+  {
+    id: "identity-protection-vs-defender-identity",
+    domain: "entra",
+    title: "Entra ID Protection vs. Defender for Identity",
+    trap: "Both detect \"identity risk,\" and the names (Protection/Identity) overlap almost exactly.",
+    tell: "ID Protection evaluates cloud sign-in and user risk signals (leaked credentials, impossible travel). Defender for Identity specifically watches on-premises Active Directory signals (domain controllers) for things like lateral movement — it's the hybrid/on-prem specialist.",
+    items: [
+      { term: "Microsoft Entra ID Protection", note: "Cloud sign-in/user risk scoring." },
+      { term: "Microsoft Defender for Identity", note: "On-prem AD signal analysis: lateral movement, insider threats." },
+    ],
+  },
+  {
+    id: "conditional-access-vs-auth-context",
+    domain: "entra",
+    title: "Conditional Access vs. Authentication context",
+    trap: "Authentication context is built on Conditional Access, so it's tempting to treat them as the same feature.",
+    tell: "Conditional Access sets rules for signing into an app as a whole. Authentication context lets you carve out one specific resource inside that app (like a single SharePoint library) and apply stricter rules only there.",
+    items: [
+      { term: "Conditional Access", note: "App-level (or broader) policy engine." },
+      { term: "Authentication context", note: "Resource-level policy scoping within an app." },
+    ],
+  },
+  {
+    id: "defender-cloud-vs-cloud-apps",
+    domain: "security",
+    title: "Defender for Cloud vs. Defender for Cloud Apps",
+    trap: "This is probably the single most-confused name pair in the whole Microsoft security portfolio — \"Cloud\" vs. \"Cloud Apps\" is one word apart.",
+    tell: "Defender for Cloud protects your Azure/AWS/GCP infrastructure (VMs, SQL, containers — CSPM + CWPP). Defender for Cloud Apps is a CASB that governs SaaS applications your users connect to (shadow IT, OAuth permissions). One secures your cloud resources; the other secures the apps your people use.",
+    items: [
+      { term: "Microsoft Defender for Cloud", note: "Posture + workload protection for your own cloud infrastructure." },
+      { term: "Microsoft Defender for Cloud Apps", note: "CASB governing third-party SaaS apps your users access." },
+    ],
+  },
+  {
+    id: "cspm-vs-cwpp",
+    domain: "security",
+    title: "CSPM vs. CWPP",
+    trap: "Both live inside Defender for Cloud and both get called \"cloud security,\" so the distinction feels academic until a question hinges on it.",
+    tell: "CSPM asks \"is this configured correctly?\" (posture, before an attack). CWPP asks \"is something attacking this workload right now?\" (active protection, during/after).",
+    items: [
+      { term: "CSPM", note: "Configuration assessment and recommendations. Foundational tier is free." },
+      { term: "CWPP", note: "Real-time threat protection per workload type — a paid Defender plan." },
+    ],
+  },
+  {
+    id: "edr-vs-xdr",
+    domain: "security",
+    title: "EDR vs. XDR",
+    trap: "XDR is often described as \"EDR but bigger,\" which undersells what actually changes.",
+    tell: "EDR covers one surface (endpoints/devices). XDR correlates signals across multiple surfaces — endpoint, email, identity, cloud apps — into a single incident instead of four disconnected alerts.",
+    items: [
+      { term: "EDR", note: "Endpoint-only detection and response." },
+      { term: "XDR", note: "Cross-surface correlation into unified incidents." },
+    ],
+  },
+  {
+    id: "siem-vs-soar",
+    domain: "security",
+    title: "SIEM vs. SOAR",
+    trap: "Sentinel is described as \"a SIEM\" so often that people forget it's actually two things bundled together.",
+    tell: "SIEM collects and analyzes data to detect. SOAR takes what's detected and automates the response. Sentinel = SIEM (detect) + SOAR (respond) in one platform.",
+    items: [
+      { term: "SIEM", note: "Detection: aggregate, correlate, analyze." },
+      { term: "SOAR", note: "Response: automate workflows once something's detected." },
+    ],
+  },
+  {
+    id: "playbooks-vs-hunting",
+    domain: "security",
+    title: "Playbooks vs. Hunting queries vs. Workbooks",
+    trap: "All three live in Sentinel's content hub and all three involve queries or automation of some kind.",
+    tell: "Playbooks act (automated response). Hunting queries search (proactive investigation, no alert needed yet). Workbooks display (visualization/dashboards only — no action, no searching for new threats).",
+    items: [
+      { term: "Playbooks", note: "Automated response workflows (Logic Apps)." },
+      { term: "Hunting queries", note: "Proactive KQL searches for undetected threats." },
+      { term: "Workbooks", note: "Dashboards to visualize existing data." },
+    ],
+  },
+  {
+    id: "nsg-vs-asg",
+    domain: "security",
+    title: "NSG vs. ASG",
+    trap: "Both are \"security groups\" for Azure networking, and the acronyms are one letter apart.",
+    tell: "NSG actually filters traffic (allow/deny rules by IP, port, protocol). ASG doesn't filter anything itself — it just groups VMs by role so NSG rules can reference the group instead of individual IPs.",
+    items: [
+      { term: "Network Security Group (NSG)", note: "Enforces allow/deny traffic rules." },
+      { term: "Application Security Group (ASG)", note: "A label/grouping mechanism used inside NSG rules." },
+    ],
+  },
+  {
+    id: "firewall-waf-ddos",
+    domain: "security",
+    title: "Azure Firewall vs. WAF vs. DDoS Protection",
+    trap: "All three are network-adjacent Azure services that \"stop bad traffic,\" so it's easy to reach for the wrong one.",
+    tell: "Azure Firewall is broad network/app filtering (L3–L7) by rule. WAF is specifically Layer-7 web app protection (SQL injection, XSS). DDoS Protection is about traffic volume/exhaustion, not content inspection — it doesn't patch code or filter for exploits.",
+    items: [
+      { term: "Azure Firewall", note: "General-purpose network + app-layer filtering." },
+      { term: "Web Application Firewall (WAF)", note: "Web-app-specific, OWASP Top 10 focused." },
+      { term: "Azure DDoS Protection", note: "Volumetric/protocol/resource-layer flood mitigation." },
+    ],
+  },
+  {
+    id: "sensitivity-vs-retention-labels",
+    domain: "compliance",
+    title: "Sensitivity labels vs. Retention labels",
+    trap: "Both are \"labels\" applied to content in Purview, so people assume one governs the other.",
+    tell: "Sensitivity labels answer \"how protected should this be?\" (encryption, marking). Retention labels answer \"how long should this exist?\" (keep/delete schedule). A document can carry both, independently.",
+    items: [
+      { term: "Sensitivity labels", note: "Classification + protection (encryption, content marking)." },
+      { term: "Retention labels", note: "Lifecycle: how long to keep, then delete or review." },
+    ],
+  },
+  {
+    id: "records-vs-lifecycle-mgmt",
+    domain: "compliance",
+    title: "Records Management vs. Data Lifecycle Management",
+    trap: "Both deal with retention and deletion, and both sit under Purview's data governance umbrella.",
+    tell: "Lifecycle management is about cleaning up ordinary data automatically to reduce risk. Records management is about legally significant content, and adds a required human disposition review before deletion — it's stricter, not just \"retention with a different name.\"",
+    items: [
+      { term: "Data Lifecycle Management", note: "Automated retention/deletion for general content." },
+      { term: "Records Management", note: "Human-reviewed disposition for legally significant content." },
+    ],
+  },
+  {
+    id: "content-vs-activity-explorer",
+    domain: "compliance",
+    title: "Content Explorer vs. Activity Explorer",
+    trap: "Both are Purview \"explorer\" tools that sound like they show the same thing from a different angle.",
+    tell: "Content Explorer shows where labeled content currently sits. Activity Explorer shows what people have done to it over time (including label downgrades). One is a snapshot of place; the other is a history of behavior.",
+    items: [
+      { term: "Content Explorer", note: "Where labeled/classified content lives right now." },
+      { term: "Activity Explorer", note: "User activity and label changes over time." },
+    ],
+  },
+  {
+    id: "dlp-vs-sensitivity-labels",
+    domain: "compliance",
+    title: "DLP vs. Sensitivity labels",
+    trap: "Both \"protect sensitive data,\" so it's tempting to treat them as the same control wearing two names.",
+    tell: "Sensitivity labels classify and persistently protect a specific piece of content (it travels with the file). DLP watches for sensitive content patterns anywhere they appear and blocks them leaving — it can act even on unlabeled content.",
+    items: [
+      { term: "Sensitivity labels", note: "Classifies and protects a specific file/email, persistently." },
+      { term: "Data Loss Prevention (DLP)", note: "Detects and blocks sensitive content patterns from leaving, labeled or not." },
+    ],
+  },
+  {
+    id: "insider-risk-vs-comm-compliance",
+    domain: "compliance",
+    title: "Insider Risk Management vs. Communication Compliance",
+    trap: "Both watch user behavior for red flags inside Microsoft 365, and both can involve HR/legal.",
+    tell: "Insider Risk Management looks broadly for risky behavior patterns (data theft, unusual downloads) across many signals. Communication Compliance specifically scans message content in Teams/email/Copilot for policy violations like harassment or leaked sensitive data.",
+    items: [
+      { term: "Insider Risk Management", note: "Broad behavioral risk detection (IP theft, data exfiltration)." },
+      { term: "Communication Compliance", note: "Message-content scanning for policy violations." },
+    ],
+  },
+  {
+    id: "compliance-manager-vs-secure-score",
+    domain: "compliance",
+    title: "Compliance Manager (compliance score) vs. Microsoft Secure Score",
+    trap: "Both produce a single number out of a maximum you're meant to improve, so people use them interchangeably in conversation.",
+    tell: "Compliance Manager's score measures alignment with regulations/standards (compliance). Secure Score measures technical security configuration and posture (security). A perfect Secure Score doesn't mean you're compliant with a regulation, and vice versa.",
+    items: [
+      { term: "Compliance Manager / compliance score", note: "Regulatory & standards alignment." },
+      { term: "Microsoft Secure Score", note: "Technical security posture across Defender for Cloud / Microsoft 365." },
+    ],
+  },
+  {
+    id: "priva-vs-purview",
+    domain: "compliance",
+    title: "Microsoft Priva vs. Microsoft Purview",
+    trap: "Priva is easy to assume is \"just part of Purview\" since both are compliance-adjacent Microsoft products with similar-sounding names.",
+    tell: "Purview is the broad data governance/security/compliance umbrella (labels, DLP, eDiscovery, audit, and more). Priva is a separate, narrower product specifically for personal-data privacy risk and assessments.",
+    items: [
+      { term: "Microsoft Purview", note: "The broad governance, security, and compliance platform." },
+      { term: "Microsoft Priva", note: "A separate, privacy-specific product." },
+    ],
+  },
+];
+
+
+
+// ================= App =================
+function App() {
+  const [tab, setTab] = useState("glossary"); // glossary | confused
+  const [query, setQuery] = useState("");
+  const [domainFilter, setDomainFilter] = useState(new Set(Object.keys(DOMAINS)));
+  const [openPair, setOpenPair] = useState(null);
+  const [openTerm, setOpenTerm] = useState(null);
+
+  const toggleDomain = (d) => {
+    setDomainFilter((prev) => {
+      const next = new Set(prev);
+      if (next.has(d)) {
+        if (next.size > 1) next.delete(d);
+      } else next.add(d);
+      return next;
+    });
+  };
+
+  const filteredGlossary = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return GLOSSARY.filter((t) => domainFilter.has(t.domain))
+      .filter((t) => !q || t.term.toLowerCase().includes(q) || t.definition.toLowerCase().includes(q))
+      .sort((a, b) => a.term.localeCompare(b.term));
+  }, [query, domainFilter]);
+
+  const filteredPairs = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return CONFUSION_PAIRS.filter((p) => domainFilter.has(p.domain))
+      .filter((p) => !q || p.title.toLowerCase().includes(q) || p.items.some((i) => i.term.toLowerCase().includes(q)));
+  }, [query, domainFilter]);
+
+  return (
+    <div style={s.shell}>
+      <style>{css}</style>
+
+      <div style={s.header}>
+        <div style={s.headerLeft}>
+          <Shield size={20} color="#5EEAD4" strokeWidth={2.2} />
+          <div>
+            <div style={s.title}>SC-900 TERM DECK</div>
+            <div style={s.subtitle}>Glossary, and the pairs everyone mixes up</div>
+          </div>
+        </div>
+        <div style={s.tabRow}>
+          <button
+            style={{ ...s.tabBtn, ...(tab === "glossary" ? s.tabBtnActive : {}) }}
+            onClick={() => setTab("glossary")}
+          >
+            <BookOpen size={14} /> Glossary
+          </button>
+          <button
+            style={{ ...s.tabBtn, ...(tab === "confused" ? s.tabBtnActive : {}) }}
+            onClick={() => setTab("confused")}
+          >
+            <Shuffle size={14} /> Mix-ups
+          </button>
+        </div>
+      </div>
+
+      <div style={s.controls}>
+        <div style={s.searchWrap}>
+          <Search size={15} color="#6B7684" />
+          <input
+            style={s.searchInput}
+            placeholder={tab === "glossary" ? "Search terms…" : "Search mix-ups…"}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          {query && (
+            <button style={s.clearBtn} onClick={() => setQuery("")}><X size={13} /></button>
+          )}
+        </div>
+        <div style={s.chipRow}>
+          {Object.entries(DOMAINS).map(([key, d]) => {
+            const active = domainFilter.has(key);
+            return (
+              <button
+                key={key}
+                onClick={() => toggleDomain(key)}
+                style={{
+                  ...s.chip,
+                  borderColor: active ? d.color : "#2A3441",
+                  color: active ? d.color : "#6B7684",
+                  background: active ? `${d.color}14` : "transparent",
+                }}
+              >
+                <span style={{ ...s.chipDot, background: active ? d.color : "#3A4451" }} />
+                {d.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {tab === "glossary" && (
+        <div style={s.count}>{filteredGlossary.length} term{filteredGlossary.length === 1 ? "" : "s"}</div>
+      )}
+      {tab === "confused" && (
+        <div style={s.count}>{filteredPairs.length} mix-up{filteredPairs.length === 1 ? "" : "s"}</div>
+      )}
+
+      {tab === "glossary" && (
+        <div style={s.grid}>
+          {filteredGlossary.map((t) => {
+            const d = DOMAINS[t.domain];
+            const isOpen = openTerm === t.id;
+            return (
+              <div key={t.id} style={{ ...s.termCard, borderLeft: `3px solid ${d.color}` }}
+                onClick={() => setOpenTerm(isOpen ? null : t.id)}>
+                <div style={s.termHead}>
+                  <span style={s.termName}>{t.term}</span>
+                  <span style={{ ...s.domainTagSmall, color: d.color, borderColor: d.color }}>{d.label}</span>
+                </div>
+                <div style={s.termDef}>{t.definition}</div>
+                {t.watch && (
+                  <div style={s.watchNote}><AlertTriangle size={12} /> {t.watch}</div>
+                )}
+              </div>
+            );
+          })}
+          {filteredGlossary.length === 0 && (
+            <div style={s.emptyState}>No terms match that search — try a different keyword or reset the domain filters.</div>
+          )}
+        </div>
+      )}
+
+      {tab === "confused" && (
+        <div style={s.pairList}>
+          {filteredPairs.map((p) => {
+            const d = DOMAINS[p.domain];
+            const isOpen = openPair === p.id;
+            return (
+              <div key={p.id} style={{ ...s.pairCard, borderColor: isOpen ? d.color : "#1B2531" }}>
+                <button style={s.pairHeadBtn} onClick={() => setOpenPair(isOpen ? null : p.id)}>
+                  <div style={s.pairHeadLeft}>
+                    <span style={{ ...s.domainTagSmall, color: d.color, borderColor: d.color }}>{d.label}</span>
+                    <span style={s.pairTitle}>{p.title}</span>
+                  </div>
+                  {isOpen ? <ChevronUp size={16} color="#6B7684" /> : <ChevronDown size={16} color="#6B7684" />}
+                </button>
+
+                {isOpen && (
+                  <div style={s.pairBody}>
+                    <div style={s.trapBox}>
+                      <div style={s.trapLabel}><AlertTriangle size={13} color="#FCA5A5" /> The trap</div>
+                      <div style={s.trapText}>{p.trap}</div>
+                    </div>
+                    <div style={s.tellBox}>
+                      <div style={{ ...s.trapLabel, color: "#5EEAD4" }}>How to tell them apart</div>
+                      <div style={s.trapText}>{p.tell}</div>
+                    </div>
+                    <div style={s.itemsGrid}>
+                      {p.items.map((it, i) => (
+                        <div key={i} style={s.itemBox}>
+                          <div style={{ ...s.itemTerm, color: d.color }}>{it.term}</div>
+                          <div style={s.itemNote}>{it.note}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+          {filteredPairs.length === 0 && (
+            <div style={s.emptyState}>No mix-ups match that search — try a different keyword or reset the domain filters.</div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ================= styles =================
+const css = `
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  button { cursor: pointer; font-family: inherit; }
+  input { font-family: inherit; }
+  input:focus { outline: none; }
+`;
+
+const s = {
+  shell: {
+    minHeight: "100vh",
+    background: "radial-gradient(1200px 600px at 20% -10%, #14202B 0%, #0B0F14 55%)",
+    color: "#E6EDF3",
+    fontFamily: "ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
+    padding: "20px 18px 48px",
+  },
+  header: {
+    display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap",
+    gap: 12, maxWidth: 880, margin: "0 auto 18px",
+  },
+  headerLeft: { display: "flex", alignItems: "center", gap: 10 },
+  title: { fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", fontSize: 14, fontWeight: 700, letterSpacing: "0.08em" },
+  subtitle: { fontSize: 11.5, color: "#6B7684", marginTop: 2 },
+
+  tabRow: { display: "flex", gap: 6, background: "#111820", border: "1px solid #1B2531", borderRadius: 10, padding: 4 },
+  tabBtn: { display: "flex", alignItems: "center", gap: 6, background: "transparent", border: "none", color: "#6B7684", borderRadius: 8, padding: "7px 14px", fontSize: 12.5, fontWeight: 700 },
+  tabBtnActive: { background: "#5EEAD418", color: "#5EEAD4" },
+
+  controls: { maxWidth: 880, margin: "0 auto 8px", display: "flex", flexDirection: "column", gap: 12 },
+  searchWrap: { display: "flex", alignItems: "center", gap: 8, background: "#111820", border: "1px solid #1B2531", borderRadius: 10, padding: "10px 14px" },
+  searchInput: { flex: 1, background: "transparent", border: "none", color: "#E6EDF3", fontSize: 14 },
+  clearBtn: { background: "transparent", border: "none", color: "#6B7684" },
+  chipRow: { display: "flex", flexWrap: "wrap", gap: 8 },
+  chip: { display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 999, border: "1px solid", fontSize: 12, fontWeight: 600, background: "transparent" },
+  chipDot: { width: 7, height: 7, borderRadius: "50%" },
+
+  count: { maxWidth: 880, margin: "0 auto 14px", fontSize: 11.5, color: "#6B7684", fontFamily: "ui-monospace, monospace" },
+
+  grid: { maxWidth: 880, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 },
+  termCard: { background: "#111820", border: "1px solid #1B2531", borderRadius: 10, padding: "14px 16px", cursor: "pointer" },
+  termHead: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8, marginBottom: 8 },
+  termName: { fontSize: 14, fontWeight: 700, lineHeight: 1.3 },
+  domainTagSmall: { display: "inline-block", fontSize: 9.5, fontWeight: 700, border: "1px solid", borderRadius: 999, padding: "2px 8px", whiteSpace: "nowrap", flexShrink: 0 },
+  termDef: { fontSize: 12.5, color: "#93A1B0", lineHeight: 1.6 },
+  watchNote: { display: "flex", alignItems: "flex-start", gap: 5, fontSize: 11, color: "#FDE68A", marginTop: 10, lineHeight: 1.5, fontWeight: 600 },
+
+  emptyState: { gridColumn: "1 / -1", textAlign: "center", color: "#6B7684", fontSize: 13, padding: "40px 0" },
+
+  pairList: { maxWidth: 880, margin: "0 auto", display: "flex", flexDirection: "column", gap: 10 },
+  pairCard: { background: "#111820", border: "1px solid", borderRadius: 12, overflow: "hidden" },
+  pairHeadBtn: { width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", background: "transparent", border: "none", padding: "14px 16px", color: "#E6EDF3" },
+  pairHeadLeft: { display: "flex", alignItems: "center", gap: 10, textAlign: "left" },
+  pairTitle: { fontSize: 14, fontWeight: 700 },
+  pairBody: { padding: "0 16px 18px", display: "flex", flexDirection: "column", gap: 12 },
+  trapBox: { background: "#FCA5A50D", border: "1px solid #FCA5A533", borderRadius: 8, padding: "10px 14px" },
+  tellBox: { background: "#5EEAD40D", border: "1px solid #5EEAD433", borderRadius: 8, padding: "10px 14px" },
+  trapLabel: { display: "flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, color: "#FCA5A5", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 6 },
+  trapText: { fontSize: 12.5, color: "#C7D2DD", lineHeight: 1.6 },
+  itemsGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10 },
+  itemBox: { background: "#0D1319", border: "1px solid #1B2531", borderRadius: 8, padding: "10px 12px" },
+  itemTerm: { fontSize: 12.5, fontWeight: 700, marginBottom: 4 },
+  itemNote: { fontSize: 11.5, color: "#93A1B0", lineHeight: 1.5 },
+};
+
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
+</script>
+</body>
+</html>
