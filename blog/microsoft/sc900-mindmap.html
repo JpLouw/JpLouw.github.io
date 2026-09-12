@@ -18,9 +18,22 @@
 <body>
 <div id="root"><div class="boot-loader">Loading…</div></div>
 
-<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
+<script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+<script>
+  // fallback: if the app hasn't replaced the loader after 8s, something failed to load —
+  // show a clear message instead of an infinite silent "Loading…"
+  setTimeout(function () {
+    var root = document.getElementById("root");
+    if (root && root.textContent.trim() === "Loading…") {
+      root.innerHTML = '<div class="boot-loader" style="flex-direction:column; gap:10px; text-align:center; padding:24px;">' +
+        '<div>Something failed to load — please refresh the page.</div>' +
+        '<div style="font-size:11px; opacity:0.7;">If this keeps happening, check your internet connection or try a different browser.</div>' +
+        '</div>';
+    }
+  }, 15000);
+</script>
 
 <script type="text/babel" data-presets="react">
 const { useState, useEffect, useMemo, useCallback } = React;

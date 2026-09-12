@@ -40,63 +40,65 @@
   </div>
 </header>
 
-<style>
-  .sc900-block { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 32px 0; }
-  .sc900-block summary {
-    cursor: pointer; list-style: none; display: flex; align-items: center; gap: 10px;
-    background: #111820; border: 1px solid #1B2531; border-radius: 12px;
-    padding: 14px 18px; color: #E6EDF3; font-weight: 700; font-size: 16px;
-  }
-  .sc900-block summary::-webkit-details-marker { display: none; }
-  .sc900-block summary::before {
-    content: "▸"; color: #5EEAD4; font-size: 14px; transition: transform 0.15s ease;
-  }
-  .sc900-block[open] summary::before { transform: rotate(90deg); }
-  .sc900-block summary .sc900-sub { font-weight: 400; font-size: 12.5px; color: #6B7684; margin-left: 4px; }
-  .sc900-cards {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 14px; margin-top: 14px;
-  }
-  .sc900-card {
-    display: block; text-decoration: none; background: #0D1319; border: 1px solid #1B2531;
-    border-radius: 12px; padding: 18px; transition: border-color 0.15s ease, transform 0.15s ease;
-  }
-  .sc900-card:hover { transform: translateY(-2px); }
-  .sc900-card-title { font-weight: 700; font-size: 15px; margin-bottom: 6px; }
-  .sc900-card-desc { font-size: 12.5px; color: #93A1B0; line-height: 1.55; }
-  .sc900-card-cta { font-size: 11.5px; font-weight: 700; margin-top: 12px; display: inline-block; }
-</style>
-
-<details class="sc900-block">
-  <summary>SC-900 <span class="sc900-sub">— Security, Compliance & Identity Fundamentals: three interactive study apps</span></summary>
-  <div class="sc900-cards">
-    <a class="sc900-card" href="sc900-glossary.html" target="_blank" rel="noopener"
-       style="border-color:#5EEAD433;">
-      <div class="sc900-card-title" style="color:#5EEAD4;">📘 Glossary &amp; Mix-ups</div>
-      <div class="sc900-card-desc">~65 core terms plus 22 head-to-head cards for the pairs everyone confuses — Defender for Cloud vs. Cloud Apps, CSPM vs. CWPP, and more.</div>
-      <span class="sc900-card-cta" style="color:#5EEAD4;">Open glossary →</span>
-    </a>
-
-    <a class="sc900-card" href="sc900-quiz.html" target="_blank" rel="noopener"
-       style="border-color:#FCA5A533;">
-      <div class="sc900-card-title" style="color:#FCA5A5;">🎯 Exam Quiz</div>
-      <div class="sc900-card-desc">~100 questions across every domain — Practice mode with instant feedback, or a 40-question Mock Exam graded at the end.</div>
-      <span class="sc900-card-cta" style="color:#FCA5A5;">Open quiz →</span>
-    </a>
-
-    <a class="sc900-card" href="sc900-mindmap.html" target="_blank" rel="noopener"
-       style="border-color:#C4B5FD33;">
-      <div class="sc900-card-title" style="color:#C4B5FD;">🗺️ Security Roadmap</div>
-      <div class="sc900-card-desc">An interactive mind map of the full Microsoft security suite, tagged with exactly what's covered on SC-900 versus the broader portfolio.</div>
-      <span class="sc900-card-cta" style="color:#C4B5FD;">Open roadmap →</span>
-    </a>
-  </div>
-</details>
-
 <section>
   <div class="wrap">
-    <div class="post-list">
-      <p style="color: var(--ink-soft); font-size:0.95rem; padding: 20px 0;">No posts yet — check back soon.</p>
+    <div class="series-grid">
+
+      <a class="series-card" href="sc900/index.html">
+        <div class="series-thumb">
+          <img src="../../assets/img/sc900.png" alt="" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=&quot;placeholder-label&quot;>[ add sc900.png ]</span>';">
+        </div>
+        <div class="series-card-body">
+          <div class="eyebrow">Category</div>
+          <h3>SC900</h3>
+          <p>Security, Compliance & Identity Fundamentals — glossary, quiz, and roadmap study apps.</p>
+          <div class="count">View →</div>
+        </div>
+      </a>
+
+      <a class="series-card" href="dp700/index.html">
+        <div class="series-thumb">
+          <img src="../../assets/img/dp700.png" alt="" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=&quot;placeholder-label&quot;>[ add dp700.png ]</span>';">
+        </div>
+        <div class="series-card-body">
+          <div class="eyebrow">Category</div>
+          <h3>DP700</h3>
+          <p>Fabric Data Engineer Associate — notes and resources.</p>
+          <div class="count">View →</div>
+        </div>
+      </a>
+
+      <a class="series-card" href="dp600/index.html">
+        <div class="series-thumb">
+          <img src="../../assets/img/dp600.png" alt="" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=&quot;placeholder-label&quot;>[ add dp600.png ]</span>';">
+        </div>
+        <div class="series-card-body">
+          <div class="eyebrow">Category</div>
+          <h3>DP600</h3>
+          <p>Fabric Analytics Engineer Associate — notes and resources.</p>
+          <div class="count">View →</div>
+        </div>
+      </a>
+
+      <a class="series-card" href="other-microsoft-certs/index.html">
+        <div class="series-thumb">
+          <img src="../../assets/img/other-microsoft-certs.png" alt="" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=&quot;placeholder-label&quot;>[ add other-microsoft-certs.png ]</span>';">
+        </div>
+        <div class="series-card-body">
+          <div class="eyebrow">Category</div>
+          <h3>Other Microsoft Certifications</h3>
+          <p>Everything else across the Microsoft certification track.</p>
+          <div class="count">View →</div>
+        </div>
+      </a>
+
+      <!--
+        TO ADD A NEW CATEGORY:
+        1. Create a new folder under blog/microsoft/ (lowercase-with-dashes)
+        2. Copy blog/microsoft/dp700/index.html into it as a starting template
+        3. Copy one of the <a class="series-card">...</a> blocks above, update href/image/title/desc
+      -->
+
     </div>
   </div>
 </section>
