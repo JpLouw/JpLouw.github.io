@@ -42,3 +42,22 @@
 
   sections.forEach(function (s) { observer.observe(s); });
 })();
+
+// Close the mobile burger menu automatically if the user scrolls while it's open
+(function () {
+  var toggle = document.getElementById("nav-toggle");
+  if (!toggle) return;
+  var openScrollY = 0;
+  toggle.addEventListener("change", function () {
+    if (toggle.checked) openScrollY = window.scrollY;
+  });
+  window.addEventListener(
+    "scroll",
+    function () {
+      if (toggle.checked && Math.abs(window.scrollY - openScrollY) > 10) {
+        toggle.checked = false;
+      }
+    },
+    { passive: true }
+  );
+})();
