@@ -40,10 +40,8 @@ nav .wrap{
   display:flex; align-items:center; justify-content:space-between;
   height: 62px;
 }
-nav .brand{ display:inline-flex; align-items:center; gap:7px; color: var(--gold); font-family:'Fraunces', serif; font-weight:600; font-size:1.05rem; letter-spacing:0.02em; text-decoration:none; }
+nav .brand{ display:inline-flex; align-items:center; gap:7px; color: var(--gold); font-family:'Fraunces', serif; font-weight:600; font-size:1.05rem; letter-spacing:0.02em; cursor:default; }
 nav .brand span{ color: var(--gold); }
-nav .brand .home-icon{ width:16px; height:16px; flex-shrink:0; }
-nav .brand .home-icon path{ fill: var(--gold); }
 nav ul{ display:flex; gap:28px; list-style:none; margin:0; padding:0; }
 nav a{ color:#c9cae0; text-decoration:none; font-size:0.85rem; font-weight:500; }
 nav a:hover{ color: var(--gold-soft); }

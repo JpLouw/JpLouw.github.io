@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portfolio — Juan-Pierre Louw</title>
+<title>Tools Use — Juan-Pierre Louw</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css?v=6">
-<script data-goatcounter="https://jplouw.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <link rel="icon" type="image/png" href="assets/img/favicon-32.png">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<script data-goatcounter="https://jplouw.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
 
@@ -34,39 +34,52 @@
 
 <header class="page-header">
   <div class="wrap">
-    <div class="breadcrumb"><a href="index.html">Home</a> / Portfolio</div>
-    <div class="eyebrow">Report portfolio</div>
-    <h1>Portfolio</h1>
-    <p>Live, interactive Power BI reports — built on sanitised or public datasets, with a full breakdown of the data prep, modelling, and visual design behind each one.</p>
+    <div class="breadcrumb"><a href="index.html">Home</a> / Tools Use</div>
+    <div class="eyebrow">Toolkit</div>
+    <h1>Tools Use</h1>
+    <p>The tools I use daily, and what's currently in progress.</p>
   </div>
 </header>
 
 <section>
   <div class="wrap">
-    <div class="series-grid">
-
-      <a class="series-card" href="portfolio/sample-report/index.html">
-        <div class="series-thumb">
-          <img src="assets/img/sample-report.png" alt="" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=&quot;placeholder-label&quot;>[ add sample-report.png ]</span>';">
-        </div>
-        <div class="series-card-body">
-          <div class="eyebrow">Report</div>
-          <h3>Sample Report</h3>
-          <p>Template project — replace with your first real embedded report.</p>
-          <div class="count">View report →</div>
-        </div>
-      </a>
-
-      <!--
-        TO ADD A NEW REPORT:
-        1. In Power BI Service: File -> Embed report -> Publish to web (public), copy the iframe code
-           (only ever do this with sanitised/sample data — "public" is genuinely public and search-indexable)
-        2. Duplicate the "sample-report" folder, rename it (lowercase-with-dashes)
-        3. In its index.html, replace the placeholder iframe src with your real embed URL
-        4. Fill in the Dataset / Data Prep / Visuals cards with your actual write-up
-        5. Copy one of the <a class="series-card">...</a> blocks above, update href/image/title/desc
-      -->
-
+    <div class="section-head">
+      <div class="eyebrow">Tools used daily</div>
+      <h2>Core toolkit</h2>
+    </div>
+    <div class="badge-grid" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="badge">
+        <div class="code">Microsoft Fabric</div>
+        <div class="name">The platform to use for — in progress</div>
+      </div>
+      <div class="badge">
+        <div class="code">Microsoft Power BI</div>
+        <div class="name">The tool to use for data-driven insight reports</div>
+      </div>
+      <div class="badge">
+        <div class="code">Microsoft Excel</div>
+        <div class="name">Analyses of exported data — also, all users export to Excel, right?</div>
+      </div>
+      <div class="badge">
+        <div class="code">Tabular Editor</div>
+        <div class="name">The tool to use for semantic model changes, RLS implementation</div>
+      </div>
+      <div class="badge">
+        <div class="code">Visual Studio Code</div>
+        <div class="name">Updated model changes, Git control</div>
+      </div>
+      <div class="badge">
+        <div class="code">Git</div>
+        <div class="name">Version control between developers starts here</div>
+      </div>
+      <div class="badge">
+        <div class="code">DAX Studio</div>
+        <div class="name">Model optimisation and model queries start here</div>
+      </div>
+      <div class="badge">
+        <div class="code">AI</div>
+        <div class="name">Tools for the modern workforce — used for increased productivity</div>
+      </div>
     </div>
   </div>
 </section>
