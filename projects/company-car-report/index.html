@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>(function(){try{var t=localStorage.getItem("theme");if(t==="dark"){document.documentElement.setAttribute("data-theme","dark");}}catch(e){}})();</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Company Car Report — Projects — Juan-Pierre Louw</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/css/style.css?v=6">
+<link rel="stylesheet" href="../../assets/css/style.css?v=7">
 <link rel="icon" type="image/png" href="../../assets/img/favicon-32.png">
 <link rel="apple-touch-icon" href="../../assets/img/apple-touch-icon.png">
 <script data-goatcounter="https://jplouw.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
@@ -18,7 +19,6 @@
   <div class="wrap">
     <span class="brand">Juan-Pierre <span>Louw</span></span>
     <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
-    <label for="nav-toggle" class="nav-toggle-label">&#9776;</label>
     <ul>
       <li><a href="../../index.html">Home</a></li>
       <li><a href="../../speaking.html">Public Speaking</a></li>
@@ -28,7 +28,10 @@
       <li><a href="../../blog/index.html">Blog</a></li>
       <li><a href="../../services.html">Other services</a></li>
       <li><a href="../../powerbi-consulting.html">PowerBI Consulting</a></li>
-    </ul>
+    <div class="nav-controls">
+      <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode"><svg class="icon-sun" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 4.5a1 1 0 011-1V2a1 1 0 10-2 0v1.5a1 1 0 011 1zm0 15a1 1 0 011 1V22a1 1 0 10-2 0v-1.5a1 1 0 011-1zM4.5 12a1 1 0 01-1 1H2a1 1 0 110-2h1.5a1 1 0 011 1zm15 0a1 1 0 011-1H22a1 1 0 110 2h-1.5a1 1 0 01-1-1zM5.64 5.64a1 1 0 011.41 0l1.06 1.06a1 1 0 11-1.41 1.41L5.64 7.05a1 1 0 010-1.41zm10.25 10.25a1 1 0 011.41 0l1.06 1.06a1 1 0 11-1.41 1.41l-1.06-1.06a1 1 0 010-1.41zM18.36 5.64a1 1 0 010 1.41l-1.06 1.06a1 1 0 11-1.41-1.41l1.06-1.06a1 1 0 011.41 0zM8.11 15.89a1 1 0 010 1.41l-1.06 1.06a1 1 0 11-1.41-1.41l1.06-1.06a1 1 0 011.41 0zM12 7a5 5 0 100 10 5 5 0 000-10z"/></svg><svg class="icon-moon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg></button>
+      <label for="nav-toggle" class="nav-toggle-label">&#9776;</label>
+    </div>
   </div>
 </nav>
 
@@ -68,7 +71,7 @@
     <span id="visitorCount" class="visitor-count"></span>
   </div>
 </footer>
-<script src="../../assets/js/nav-active.js?v=6"></script>
+<script src="../../assets/js/nav-active.js?v=7"></script>
 <script src="../../assets/js/visitor-count.js?v=6"></script>
 
 </body>

@@ -43,6 +43,22 @@
   sections.forEach(function (s) { observer.observe(s); });
 })();
 
+// Light/dark theme toggle
+(function () {
+  var btn = document.getElementById("themeToggle");
+  if (!btn) return;
+  btn.addEventListener("click", function () {
+    var isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    if (isDark) {
+      document.documentElement.removeAttribute("data-theme");
+      try { localStorage.setItem("theme", "light"); } catch (e) {}
+    } else {
+      document.documentElement.setAttribute("data-theme", "dark");
+      try { localStorage.setItem("theme", "dark"); } catch (e) {}
+    }
+  });
+})();
+
 // Close the mobile burger menu automatically if the user scrolls while it's open
 (function () {
   var toggle = document.getElementById("nav-toggle");
