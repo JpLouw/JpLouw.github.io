@@ -1,79 +1,33 @@
+// Theme switch first and self-contained, so nothing else on the page can stop it working
 (function () {
-  function normalize(pathname) {
-    if (pathname.endsWith("/index.html")) pathname = pathname.slice(0, -"index.html".length);
-    if (pathname.length > 1 && pathname.endsWith("/")) pathname = pathname.slice(0, -1);
-    return pathname;
-  }
-
-  var current = normalize(window.location.pathname);
-  var navLinks = document.querySelectorAll("nav ul a");
-
-  // 1) Highlight top-level page tabs (Blog, Public Speaking, Portfolio, etc.)
-  navLinks.forEach(function (a) {
-    var url = new URL(a.getAttribute("href"), window.location.href);
-    if (url.hash) return; // hash links (homepage sections) handled separately below
-    if (normalize(url.pathname) === current) a.classList.add("active");
-  });
-
-  // 2) Scroll-spy for homepage section anchors (Today / Roadmap / Certifications / Beyond the Data)
-  var sectionIds = ["today", "roadmap", "certs", "beyond"];
-  var sections = sectionIds.map(function (id) { return document.getElementById(id); }).filter(Boolean);
-  if (!sections.length) return;
-
-  var hashLinks = {};
-  navLinks.forEach(function (a) {
-    var href = a.getAttribute("href");
-    var hashIndex = href.indexOf("#");
-    if (hashIndex === -1) return;
-    hashLinks[href.slice(hashIndex + 1)] = a;
-  });
-
-  var observer = new IntersectionObserver(
-    function (entries) {
-      entries.forEach(function (entry) {
-        var link = hashLinks[entry.target.id];
-        if (!link || !entry.isIntersecting) return;
-        Object.keys(hashLinks).forEach(function (k) { hashLinks[k].classList.remove("active"); });
-        link.classList.add("active");
-      });
-    },
-    { rootMargin: "-40% 0px -50% 0px", threshold: 0 }
-  );
-
-  sections.forEach(function (s) { observer.observe(s); });
-})();
-
-// Light/dark theme toggle
-(function () {
-  var btn = document.getElementById("themeToggle");
+  var root = document.documentElement, btn = document.getElementById("themeToggle");
   if (!btn) return;
+  function sync() { btn.setAttribute("aria-checked", root.getAttribute("data-theme") === "dark" ? "true" : "false"); }
+  sync();
   btn.addEventListener("click", function () {
-    var isDark = document.documentElement.getAttribute("data-theme") === "dark";
-    if (isDark) {
-      document.documentElement.removeAttribute("data-theme");
-      try { localStorage.setItem("theme", "light"); } catch (e) {}
-    } else {
-      document.documentElement.setAttribute("data-theme", "dark");
-      try { localStorage.setItem("theme", "dark"); } catch (e) {}
-    }
+    var dark = root.getAttribute("data-theme") === "dark";
+    if (dark) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", "dark");
+    try { localStorage.setItem("theme", dark ? "light" : "dark"); } catch (e) {}
+    sync();
   });
 })();
 
-// Close the mobile burger menu automatically if the user scrolls while it's open
+// Highlight the current page's tab
 (function () {
-  var toggle = document.getElementById("nav-toggle");
-  if (!toggle) return;
-  var openScrollY = 0;
-  toggle.addEventListener("change", function () {
-    if (toggle.checked) openScrollY = window.scrollY;
-  });
-  window.addEventListener(
-    "scroll",
-    function () {
-      if (toggle.checked && Math.abs(window.scrollY - openScrollY) > 10) {
-        toggle.checked = false;
-      }
-    },
-    { passive: true }
-  );
+  try {
+    function norm(p) { if (p.slice(-11) === "/index.html") p = p.slice(0, -10); if (p.length > 1 && p.slice(-1) === "/") p = p.slice(0, -1); return p; }
+    var cur = norm(location.pathname);
+    document.querySelectorAll("nav ul a").forEach(function (a) {
+      var u = new URL(a.getAttribute("href"), location.href);
+      if (!u.hash && norm(u.pathname) === cur) a.classList.add("active");
+    });
+  } catch (e) {}
+})();
+
+// Close the mobile menu if the user scrolls while it is open
+(function () {
+  var t = document.getElementById("nav-toggle"); if (!t) return;
+  var y0 = 0;
+  t.addEventListener("change", function () { if (t.checked) y0 = window.scrollY; });
+  window.addEventListener("scroll", function () { if (t.checked && Math.abs(window.scrollY - y0) > 10) t.checked = false; }, { passive: true });
 })();
